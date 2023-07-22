@@ -5,7 +5,7 @@ title: >
   Application-Oriented Literals in CBOR Extended Diagnostic Notation
 abbrev: CBOR EDN Literals
 docname: draft-ietf-cbor-edn-literals-latest
-date: 2023-07-10
+date: 2023-07-23
 
 keyword: Internet-Draft
 cat: info
@@ -33,7 +33,12 @@ venue:
 
 normative:
   RFC8610: cddl
+  I-D.ietf-cbor-update-8610-grammar: cddlupd
+  RFC8742: seq
   RFC8949: cbor
+  RFC8259: json
+  RFC5234: abnf
+  RFC7405: abnfcs
   I-D.ietf-core-href: cri
   RFC3339: datetime
   RFC3986: uri
@@ -91,6 +96,35 @@ byte string presentations predefined in {{-cbor}} and the application-extensions
 [^cri-later]: Note that {{cri}} and {{cri-grammar}} about CRIs may move to the {{-cri}}
     specification, depending on the relative speed of approval; the
     later document gets the section.
+
+## Terminology
+
+{{Section 8 of -cbor}} defines the original CBOR diagnostic notation,
+and {{Appendix G of -cddl}} supplies a number of extensions to the
+diagnostic notation that result in the Extended Diagnostic Notation
+(EDN).
+The diagnostic notation extensions include popular features such as
+embedded CBOR (encoded CBOR data items in byte strings) and comments.
+A simple diagnostic notation extension for CBOR sequences was added in
+{{Section 4.2 of -seq}}.
+As diagnostic notation is not used in the kind of interchange
+situations where backward compatibility would pose a significant
+obstacle, there is little point in not using these extensions.
+
+Therefore, when we refer to "_diagnostic notation_", we mean to
+include the original notation from {{Section 8 of -cbor}} as well as the
+extensions from {{Appendix G of -cddl}}, {{Section 4.2 of -seq}}, and the
+present document.
+However, we stick to the abbreviation "_EDN_" as it has become quite
+popular and is more sharply distinguishable from other meanings than
+"DN" would be.
+
+In a similar vein, the term "ABNF" in this document refers to the
+language defined in {{-abnf}} as extended in {{-abnfcs}}, even if the
+latter extensions are not currently used in this document.
+The term "CDDL" refers to the data definition language defined in
+{{-cddl}} and its registered extensions (such as those in {{RFC9165}}), as
+well as {{-cddlupd}}.
 
 Application-Oriented Extension Literals
 =======================================
@@ -522,6 +556,75 @@ sub-delims    = "!" / "$" / "&" / "'" / "(" / ")"
 {: #abnf-grammar-cri sourcecode-name="cbor-edn-cri.abnf"
 title="ABNF Definition of URI Representation of a CRI"
 }
+
+EDN and CDDL
+============
+
+EDN was designed as a language to provide a human-readable
+representation of an instance, i.e., a single CBOR data item or CBOR
+sequence.
+CDDL was designed as a language to describe an (often large) set of
+such instances (which itself constitutes a language), in the form of a
+_data definition_ or _grammar_ (or sometimes _schema_).
+
+The two languages share some similarities, not the least because they
+have mutually inspired each other.
+But they have very different roots:
+
+* EDN is an extension to JSON {{-json}}.
+  (Any (interoperable) JSON text is also valid EDN.)
+* CDDL is inspired by ABNF's syntax {{-abnf}}.
+
+For engineers that are using both EDN and CDDL, it is easy to write
+"CDDLisms" or "EDNisms" into their drafts that are meant to be in the
+other language.
+(This is one more of the many reasons to always validate formal
+language instances with tools.)
+
+Important differences include:
+
+* Comment syntax.  CDDL inherits ABNF's semicolon-delimited end of
+  line characters, while EDN cannot inherit anything from JSON here.
+  Inspired by JavaScript, EDN simplifies JavaScript's copy of the
+  original C comment syntax to be delimited by single slashes (where
+  line ends are not of interest).
+
+  {:compact}
+  EDN:
+  : `{ / alg / 1: -7 / ECDSA 256 / }`
+
+  CDDL:
+  : `? 1 => int / tstr,  ; algorithm identifier`
+
+* Syntax for tags.  CDDL's tag syntax is part of the system for
+  referring to CBOR's fundamentals (the major type 6, in this case)
+  and (with {{-cddlupd}}) allows specifying the actual tag number
+  separately, while EDN's tag syntax is a simple decimal number and a
+  pair of parentheses.
+
+  EDN:
+  : `98(['', {}, /rest elided here:/ …])`
+
+  CDDL:
+  : `COSE_Sign_Tagged = #6.98(COSE_Sign)`
+
+* Separator character.  Like JSON, EDN requires commas as separators
+  between array elements and map members and doesn't allow a trailing
+  comma before the closing bracket/brace.
+  CDDL's comma separators in these contexts (CDDL groups) are optional
+  (and actually are terminators, which together with their optionality
+  allows them to be used like separators as well or even not at all).
+
+* Embedded CBOR.  EDN has a special syntax to describe the content of
+  byte strings that are encoded CBOR data items.  CDDL can specify
+  these with a control operator, which looks very different.
+
+  EDN:
+  : `98([/h'a10126'/ << {/alg/ 1: -7 /ECDSA 256/ } >>, /…/])`
+
+  CDDL:
+  : `serialized_map = bytes .cbor header_map`
+
 
 
 Acknowledgements
