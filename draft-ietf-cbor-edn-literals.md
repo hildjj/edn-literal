@@ -421,7 +421,7 @@ comments in b64, as "/" is valid base64-classic.
 
 ~~~ abnf
 app-string-b64  = B *(4(b64dig B))
-                  [b64dig B b64dig B ["==" / b64dig B ["="]] B]
+                  [b64dig B b64dig B ["=" B "=" / b64dig B ["="]] B]
 b64dig          = ALPHA / DIGIT / "-" / "_" / "+" / "/"
 B               = *iblank
 iblank          = %x0A / %x20  ; Not HT or CR (gone)
