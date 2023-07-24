@@ -413,8 +413,8 @@ title="ABNF Definition of Hexadecimal Representation of a Byte String"
 The syntax of the content of byte strings represented in base64 is
 described by the ABNF in {{abnf-grammar-h}}.
 
-This syntax allows both the classic {{Section 4 of RFC4648}} and the
-URL-safe {{Section 5 of RFC4648}} alphabet to be used.
+This syntax allows both the classic ({{Section 4 of RFC4648}}) and the
+URL-safe ({{Section 5 of RFC4648}}) alphabet to be used.
 It accommodates, but does not require base64 padding.
 Note that inclusion of classic base64 makes it impossible to have
 comments in b64, as "/" is valid base64-classic.
