@@ -32,7 +32,7 @@ kp              = item S ":" S item
 
 ; We allow %x09 HT in prose, but not in strings
 blank           = %x09 / %x0A / %x0D / %x20
-non-slash       = blank / %x21-2e / %x2f-10FFFF
+non-slash       = blank / %x21-2e / %x30-10FFFF
 S               = *blank *("/" *non-slash "/" *blank )
 
 ; optional trailing comma (ignored)
