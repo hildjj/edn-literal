@@ -1,4 +1,4 @@
-seq             = S [item S *("," S item S)] S
+seq             = S [item S *("," S item S) OC] S
 item            = map / array / tagged
                 / basenumber / decnumber / infin / simple
                 / tstr / bstr / embedded / streamstring
@@ -26,8 +26,8 @@ bstr            = app-string / sqstr ; app could be any type
 tstr            = DQUOTE *double-quoted DQUOTE
 embedded        = "<<" seq ">>"
 
-array           = "[" spec [item S *("," S item S)] "]"
-map             = "{" spec [kp S *("," S kp S)] "}"
+array           = "[" spec [item S *("," S item S) OC] "]"
+map             = "{" spec [kp S *("," S kp S) OC] "}"
 kp              = item S ":" S item
 
 ; We allow %x09 HT in prose, but not in strings
@@ -35,9 +35,12 @@ blank           = %x09 / %x0A / %x0D / %x20
 non-slash       = blank / %x21-2e / %x2f-10FFFF
 S               = *blank *("/" *non-slash "/" *blank )
 
+; optional trailing comma (ignored)
+OC              = ["," S]
+
 ; note that there must be at least one string to distinguish
-streamstring    = "(" spec1 tstr S *("," S tstr S) ")"
-                / "(" spec1 sqstr S *("," S sqstr S) ")"
+streamstring    = "(" spec1 tstr S *("," S tstr S) OC ")"
+                / "(" spec1 sqstr S *("," S sqstr S) OC ")"
 spec            = S ["_" S]
 spec1           = S "_" S
 
