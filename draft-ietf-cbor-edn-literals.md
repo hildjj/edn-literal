@@ -5,7 +5,7 @@ title: >
   Application-Oriented Literals in CBOR Extended Diagnostic Notation
 abbrev: CBOR EDN Literals
 docname: draft-ietf-cbor-edn-literals-latest
-date: 2023-07-23
+date: 2023-09-04
 
 keyword: Internet-Draft
 cat: info
