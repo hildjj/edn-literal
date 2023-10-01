@@ -626,7 +626,7 @@ Important differences include:
   pair of parentheses.
 
   EDN:
-  : `98(['', {}, /rest elided here:/ …])`
+  : `98(['', {}, /rest elided here: …/])`
 
   CDDL:
   : `COSE_Sign_Tagged = #6.98(COSE_Sign)`
