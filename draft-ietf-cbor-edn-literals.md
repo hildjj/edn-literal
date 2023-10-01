@@ -2,8 +2,10 @@
 v: 3
 
 title: >
-  Application-Oriented Literals in CBOR Extended Diagnostic Notation
-abbrev: CBOR EDN Literals
+  CBOR Extended Diagnostic Notation (EDN):
+  Application-Oriented Literals and ABNF
+abbrev: >
+  CBOR EDN: Literals and ABNF
 docname: draft-ietf-cbor-edn-literals-latest
 date: 2023-09-04
 
