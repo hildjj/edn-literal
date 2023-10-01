@@ -79,13 +79,13 @@ Introduction        {#intro}
 For the Concise Binary Object Representation, CBOR,
 {{Section 8 of -cbor}} in conjunction with {{Appendix G of -cddl}}
 [^abs1-]
-Diagnostic notation is based on JSON, with extensions
+Diagnostic notation syntax is based on JSON, with extensions
 for representing CBOR constructs such as binary data and tags.
 [^abs2-]
 
 [^abs2-]: (Standardizing this together with the actual interchange format does
     not serve to create another interchange format, but enables the use of
-    a shared diagnostic notation in tools for and documents about CBOR.)
+    a shared diagnostic notation in tools for and in documents about CBOR.)
 
 [^abs3-] {{-cri}}.
 
@@ -107,8 +107,8 @@ diagnostic notation that result in the Extended Diagnostic Notation
 (EDN).
 The diagnostic notation extensions include popular features such as
 embedded CBOR (encoded CBOR data items in byte strings) and comments.
-A simple diagnostic notation extension for CBOR sequences was added in
-{{Section 4.2 of -seq}}.
+A simple diagnostic notation extension that enables representing CBOR
+sequences was added in {{Section 4.2 of -seq}}.
 As diagnostic notation is not used in the kind of interchange
 situations where backward compatibility would pose a significant
 obstacle, there is little point in not using these extensions.
@@ -136,8 +136,8 @@ string literals to also be available for application-oriented extensions.
 
 As per {{Section 8 of -cbor}}, the diagnostic notation can notate byte
 strings in a number of {{-base}} base encodings, where the encoded text
-is enclosed in single quotes, prefixed by an identifier (>h< for
-base16, >b32< for base32, >h32< for base32hex, >b64< for base64 or
+is enclosed in single quotes, prefixed by an identifier (»h« for
+base16, »b32« for base32, »h32« for base32hex, »b64« for base64 or
 base64url).
 
 This syntax can be thought to establish a name space, with the names
@@ -146,7 +146,8 @@ The present specification defines additional names for this namespace,
 which we call *application-extension identifiers*.
 For the quoted string, the same rules apply as for byte strings.
 In particular, the escaping rules of JSON strings are applied
-equivalently for application-oriented extensions, e.g., `\\` stands
+equivalently for application-oriented extensions, e.g., within the
+quoted string `\\` stands
 for a single backslash and `\'` stands for a single quote.
 
 An application-extension identifier is a name consisting of a
@@ -395,7 +396,7 @@ The following additional items should help in the interpretation:
   present, in which case it stands for a floating point value in the
   usual decimal notation.
 * `basenumber` stands for an integer in the usual base 16/hexadecimal
-  ("0x"), base 8/octal ("0o"), or base 2/binary ("0b"), unless the
+  ("0x"), base 8/octal ("0o"), or base 2/binary ("0b") notation, unless the
   optional part containing a "p" is present, in which case it stands
   for a floating point number in the usual hexadecimal notation (which
   uses a mantissa in hexadecimal and an exponent in decimal notation).
@@ -405,7 +406,7 @@ ABNF Definitions for app-string Content {#app-grammars}
 
 This appendix provides ABNF definitions for application-oriented extension
 literals defined in {{-cbor}} and in this specification.
-These grammars describe the decoded content of the `sqstr` components that
+These grammars describe the *decoded* content of the `sqstr` components that
 combine with the application-extension identifiers to form
 application-oriented extension literals.
 Each of these may make use of rules defined in {{abnf-grammar}}.
@@ -588,26 +589,26 @@ representation of an instance, i.e., a single CBOR data item or CBOR
 sequence.
 CDDL was designed as a language to describe an (often large) set of
 such instances (which itself constitutes a language), in the form of a
-_data definition_ or _grammar_ (or sometimes _schema_).
+_data definition_ or _grammar_ (or sometimes called _schema_).
 
 The two languages share some similarities, not the least because they
 have mutually inspired each other.
 But they have very different roots:
 
-* EDN is an extension to JSON {{-json}}.
+* EDN syntax is an extension to JSON syntax {{-json}}.
   (Any (interoperable) JSON text is also valid EDN.)
-* CDDL is inspired by ABNF's syntax {{-abnf}}.
+* CDDL syntax is inspired by ABNF's syntax {{-abnf}}.
 
 For engineers that are using both EDN and CDDL, it is easy to write
 "CDDLisms" or "EDNisms" into their drafts that are meant to be in the
 other language.
-(This is one more of the many reasons to always validate formal
+(This is one more of the many motivations to always validate formal
 language instances with tools.)
 
 Important differences include:
 
 * Comment syntax.  CDDL inherits ABNF's semicolon-delimited end of
-  line characters, while EDN cannot inherit anything from JSON here.
+  line characters, while EDN finds nothing in JSON that could be inherited here.
   Inspired by JavaScript, EDN simplifies JavaScript's copy of the
   original C comment syntax to be delimited by single slashes (where
   line ends are not of interest).
