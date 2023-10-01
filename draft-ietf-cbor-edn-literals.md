@@ -438,14 +438,16 @@ This syntax allows both the classic ({{Section 4 of RFC4648}}) and the
 URL-safe ({{Section 5 of RFC4648}}) alphabet to be used.
 It accommodates, but does not require base64 padding.
 Note that inclusion of classic base64 makes it impossible to have
-comments in b64, as "/" is valid base64-classic.
+in-line comments in b64, as "/" is valid base64-classic.
 
 ~~~ abnf
 app-string-b64  = B *(4(b64dig B))
                   [b64dig B b64dig B ["=" B "=" / b64dig B ["="]] B]
 b64dig          = ALPHA / DIGIT / "-" / "_" / "+" / "/"
-B               = *iblank
+B               = *iblank *(icomment *iblank)
 iblank          = %x0A / %x20  ; Not HT or CR (gone)
+icomment        = "#" *inon-lf %x0A
+inon-lf         = %x20-D7FF / %xE000-10FFFF
 ~~~
 {: #abnf-grammar-b64 sourcecode-name="cbor-edn-b64.abnf"
 title="ABNF definition of Base64 Representation of a Byte String"
@@ -611,11 +613,18 @@ Important differences include:
   line characters, while EDN finds nothing in JSON that could be inherited here.
   Inspired by JavaScript, EDN simplifies JavaScript's copy of the
   original C comment syntax to be delimited by single slashes (where
-  line ends are not of interest).
+  line ends are not of interest); it also adds end-of-line comments
+  starting with `#`.
 
   {:compact}
   EDN:
-  : `{ / alg / 1: -7 / ECDSA 256 / }`
+  : ~~~ cbor-diag
+    { / alg / 1: -7 / ECDSA 256 / }
+    ,
+    { 1:   # alg
+        -7 # ECDSA 256
+    }
+    ~~~
 
   CDDL:
   : `? 1 => int / tstr,  ; algorithm identifier`
