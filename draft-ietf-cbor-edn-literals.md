@@ -120,8 +120,7 @@ popular and is more sharply distinguishable from other meanings than
 "DN" would be.
 
 In a similar vein, the term "ABNF" in this document refers to the
-language defined in {{-abnf}} as extended in {{-abnfcs}}, even if the
-latter extensions are not currently used in this document.
+language defined in {{-abnf}} as extended in {{-abnfcs}}.
 The term "CDDL" refers to the data definition language defined in
 {{-cddl}} and its registered extensions (such as those in {{RFC9165}}), as
 well as {{-cddlupd}}.
