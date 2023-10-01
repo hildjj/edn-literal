@@ -33,7 +33,7 @@ kp              = item S ":" S item
 
 ; We allow %x09 HT in prose, but not in strings
 blank           = %x09 / %x0A / %x0D / %x20
-non-slash       = blank / %x21-2e / %x30-10FFFF
+non-slash       = blank / %x21-2e / %x30-D7FF / %xE000-10FFFF
 S               = *blank *("/" *non-slash "/" *blank )
 
 ; optional trailing comma (ignored)
@@ -80,7 +80,8 @@ unescaped       = %x0A ; new line
                      ; omit 0x27 '
                 / %x28-5B
                      ; omit 0x5C \
-                / %x5D-10FFFF
+                / %x5D-D7FF ; skip surrogate code points
+                / %xE000-10FFFF
 
 DQUOTE          = %x22    ; " double quote
 DIGIT           = %x30-39 ; 0-9
