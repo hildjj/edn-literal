@@ -486,7 +486,10 @@ title="ABNF Definition of RFC3339 Representation of a Date/Time"
 ### cri: ABNF Definition of URI Representation of a CRI {#cri-grammar}
 
 The syntax of the content of `cri` literals can be described by the
-ABNF for `URI-reference` in {{Section 4.1 of -uri}}:
+ABNF for `URI-reference` in {{Section 4.1 of -uri}}, as reproduced
+in {{abnf-grammar-cri}}.
+If the content is not ASCII only (i.e., for IRIs), first apply
+{{Section 3.1 of RFC3987}} and apply this grammar to the result.
 
 ~~~ abnf
 app-string-cri = URI-reference
