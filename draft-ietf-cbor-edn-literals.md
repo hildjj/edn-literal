@@ -221,13 +221,14 @@ floating-point number; the value is an integer number otherwise.
 As an example, the CBOR diagnostic notation
 
 ~~~ cbor-diag
-dt'1969-07-21T02:56:16Z'
+[dt'1969-07-21T02:56:16Z',
+ dt'1969-07-21T02:56:16.5Z']
 ~~~
 
 is equivalent to
 
 ~~~ cbor-diag
--14159024
+[-14159024, -14159023.5]
 ~~~
 
 See {{dt-grammar}} for an ABNF definition for the content of DT literals.
