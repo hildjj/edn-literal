@@ -379,6 +379,23 @@ implementation experience.
 ~~~
 {: #abnf-grammar "ABNF Definition of CBOR EDN" sourcecode-name="cbor-edn.abnf"}
 
+While an ABNF grammar defines the set of character strings that are
+considered to be valid EDN by this ABNF, the mapping of these
+character strings into the generic data model of CBOR is not always
+obvious.
+
+The following additional items should help in the interpretation:
+
+* `decnumber` stands for an integer in the usual decimal notation, unless at
+  least one of the optional parts starting with "." and "e" are
+  present, in which case it stands for a floating point value in the
+  usual decimal notation.
+* `basenumber` stands for an integer in the usual base 16/hexadecimal
+  ("0x"), base 8/octal ("0o"), or base 2/binary ("0b"), unless the
+  optional part containing a "p" is present, in which case it stands
+  for a floating point number in the usual hexadecimal notation (which
+  uses a mantissa in hexadecimal and an exponent in decimal notation).
+
 ABNF Definitions for app-string Content {#app-grammars}
 ---------------------------------------
 
