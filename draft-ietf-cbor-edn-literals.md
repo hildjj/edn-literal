@@ -34,25 +34,34 @@ venue:
   latest: "https://cbor-wg.github.io/edn-literal/"
 
 normative:
+  STD94:
+    -: cbor
+    =: RFC8949
   RFC8610: cddl
   I-D.ietf-cbor-update-8610-grammar: cddlupd
   RFC8742: seq
-  RFC8949: cbor
-  RFC8259: json
-  RFC5234: abnf
+  STD90:
+    -: json
+    =: RFC8259
+  STD68:
+   -: abnf
+   =: RFC5234
   RFC7405: abnfcs
   I-D.ietf-core-href: cri
   RFC3339: datetime
   RFC3986: uri
   RFC3987: iri
   RFC9165: controls
+  BCP26:
+    -: ianacons
+    =: RFC8126
 informative:
   RFC4648: base
   IANA.core-parameters:
 
 --- abstract
 
-The Concise Binary Object Representation, CBOR (RFC 8949), [^abs1-]
+The Concise Binary Object Representation, CBOR (STD 94, RFC 8949), [^abs1-]
 
 [^abs1-]: defines a "diagnostic notation" in order to
     be able to converse about CBOR data items without having to resort to
