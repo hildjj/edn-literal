@@ -45,9 +45,9 @@ comment         = "/" *non-slash "/"
 ; optional trailing comma (ignored)
 OC              = ["," S]
 
+; check semantically that strings are either all text or all bytes
 ; note that there must be at least one string to distinguish
-streamstring    = "(" spec1 tstr S *("," S tstr S) OC ")"
-                / "(" spec1 bstr S *("," S bstr S) OC ")"
+streamstring    = "(" spec1 string S *("," S string S) OC ")"
 spec            = ["_" *wordchar S]
 spec1           = "_" S
 
