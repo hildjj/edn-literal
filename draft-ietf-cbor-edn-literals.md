@@ -400,6 +400,29 @@ The following additional items should help in the interpretation:
   optional part containing a "p" is present, in which case it stands
   for a floating point number in the usual hexadecimal notation (which
   uses a mantissa in hexadecimal and an exponent in decimal notation).
+* `spec` stands for an encoding indicator.
+  As per {{Section 8.1 of -cbor}}:
+
+  * an underscore `_` on its own stands
+    for indefinite length encoding (`ai=31`, only available behind the
+    opening brace/bracket for `map` and `array`: strings have a special
+    syntax `streamstring` for indefinite length encoding except for the
+    special cases ''_ and ""_), and
+  * `_0` to `_3` stand for `ai=24` to `ai=27`, respectively.
+
+  Surprisingly, {{Section 8.1 of -cbor}} does not address `ai=0` to
+  `ai=23` — the assumption seems to be that preferred serialization
+  (Section 4.1 of {{-cbor}}) will be used when converting CBOR
+  diagnostic notation to an encoded CBOR data item, so leaving out the
+  encoding indicator for a data item with a preferred serialization
+  will implicitly use `ai=0` to `ai=23` if that is possible.
+  The present specification allows to make this explicit:
+
+  * A double underscore `__` stands for encoding with `ai=0` to `ai=23`.
+
+  While no immediate use for further values for encoding indicators
+  comes to mind, this is an extension point for EDN; {reg-ei}} defines
+  a registry for additional values.
 
 ABNF Definitions for app-string Content {#app-grammars}
 ---------------------------------------
