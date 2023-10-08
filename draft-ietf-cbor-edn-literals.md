@@ -310,6 +310,57 @@ entries have the Change Controller "IETF".
 Identifier Registry"}
 
 
+## Encoding Indicators {#reg-ei}
+
+IANA is requested to create an "Encoding Indicators"
+registry in the newly created "CBOR Diagnostic Notation" registry group
+\[IANA.cbor-diagnostic-notation], with the policy "specification required"
+({{Section 4.6 of -ianacons}}).
+
+The experts are instructed to be frugal in the allocation of
+encoding indicators that are suggestive of generally applicable semantics,
+keeping them in reserve for encoding indicator registrations that are likely to enjoy wide
+use and can make good use of their conciseness.
+If the expert becomes aware of application-extension identifiers that are deployed and
+in use, they may also solicit a specification and initiate a registration on their own if
+they deem such a registration can avert potential future collisions.
+{: #de-instructions-ei}
+
+Each entry in the registry must include:
+
+{:vspace}
+Encoding Indicator:
+: an ASCII {{-ascii}} string that starts with an underscore letter and
+  can contain zero or more underscores, letters and digits after that
+  (`_[_A-Za-z0-9]*`). No other entry in the registry can have the same
+  Encoding Indicator.
+
+Description:
+: a brief description
+
+Change Controller:
+: (see {{Section 2.3 of -ianacons}})
+
+Reference:
+: a reference document that provides a description of the
+  application-extension identifier
+
+
+The initial content of the registry is shown in {{tab-iana-ei}}; all
+entries have the Change Controller "IETF".
+
+| Encoding Indicator | Description                        | Reference        |
+|--------------------+------------------------------------+------------------|
+| _                  | Indefinite Length Encoding (ai=31) | RFC8949, RFCthis |
+| __                 | ai=0 to ai=23                      | RFCthis          |
+| _0                 | ai=24                              | RFC8949, RFCthis |
+| _1                 | ai=25                              | RFC8949, RFCthis |
+| _2                 | ai=26                              | RFC8949, RFCthis |
+| _3                 | ai=27                              | RFC8949, RFCthis |
+{: #tab-iana-ei title="Initial Content of Encoding Indicator Registry"}
+
+
+
 
 ## Media Type
 
