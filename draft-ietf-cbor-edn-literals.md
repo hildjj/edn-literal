@@ -3,7 +3,7 @@ v: 3
 
 title: >
   CBOR Extended Diagnostic Notation (EDN):
-  Application-Oriented Literals and ABNF
+  Application-Oriented Literals, ABNF, and Media Type
 abbrev: >
   CBOR EDN: Literals and ABNF
 docname: draft-ietf-cbor-edn-literals-latest
@@ -34,25 +34,37 @@ venue:
   latest: "https://cbor-wg.github.io/edn-literal/"
 
 normative:
+  STD94:
+    -: cbor
+    =: RFC8949
   RFC8610: cddl
   I-D.ietf-cbor-update-8610-grammar: cddlupd
   RFC8742: seq
-  RFC8949: cbor
-  RFC8259: json
-  RFC5234: abnf
+  STD90:
+    -: json
+    =: RFC8259
+  STD68:
+   -: abnf
+   =: RFC5234
   RFC7405: abnfcs
   I-D.ietf-core-href: cri
   RFC3339: datetime
   RFC3986: uri
   RFC3987: iri
   RFC9165: controls
+  BCP26:
+    -: ianacons
+    =: RFC8126
+  STD80:
+    -: ascii
+    =: RFC20
 informative:
   RFC4648: base
   IANA.core-parameters:
 
 --- abstract
 
-The Concise Binary Object Representation, CBOR (RFC 8949), [^abs1-]
+The Concise Binary Object Representation, CBOR (STD 94, RFC 8949), [^abs1-]
 
 [^abs1-]: defines a "diagnostic notation" in order to
     be able to converse about CBOR data items without having to resort to
@@ -237,13 +249,56 @@ See {{dt-grammar}} for an ABNF definition for the content of DT literals.
 IANA Considerations {#sec-iana}
 ===================
 
-## CBOR Diagnostic Notation application extension identifiers registry {#appext-iana}
+[^to-be-removed]
 
-IANA is requested to create a registry [[where?]] for
-application-extension identifiers, with the initial content shown in
-{{tab-iana}}.
+[^to-be-removed]: RFC Editor: please replace RFCthis with the RFC
+    number of this RFC, \[IANA.cbor-diagnostic-notation] with a
+    reference to the new registry group, and remove this note.
 
-| application-extension identifier | description                     | reference |
+
+## CBOR Diagnostic Notation Application-extension Identifiers Registry {#appext-iana}
+
+IANA is requested to create an "Application-Extension Identifiers"
+registry in a new "CBOR Diagnostic Notation" registry group
+\[IANA.cbor-diagnostic-notation], with the policy "expert review"
+({{Section 4.5 of -ianacons}}).
+
+The experts are instructed to be frugal in the allocation of
+application-extension identifiers that are suggestive of generally applicable semantics,
+keeping them in reserve for application-extensions that are likely to enjoy wide
+use and can make good use of their conciseness.
+The expert is also instructed to direct the registrant to provide a
+specification ({{Section 4.6 of -ianacons}}), but can make exceptions,
+for instance when a specification is not available at the time of
+registration but is likely forthcoming.
+If the expert becomes aware of application-extension identifiers that are deployed and
+in use, they may also initiate a registration on their own if
+they deem such a registration can avert potential future collisions.
+{: #de-instructions}
+
+Each entry in the registry must include:
+
+{:vspace}
+Application-Extension Identifier:
+: a lower case ASCII {{-ascii}} string that starts with a letter and can
+  contain letters and digits after that (`[a-z][a-z0-9]*`). No other
+  entry in the registry can have the same function name.
+
+Description:
+: a brief description
+
+Change Controller:
+: (see {{Section 2.3 of -ianacons}})
+
+Reference:
+: a reference document that provides a description of the
+  application-extension identifier
+
+
+The initial content of the registry is shown in {{tab-iana}}; all
+entries have the Change Controller "IETF".
+
+| Application-extension Identifier | Description                     | Reference |
 |----------------------------------|---------------------------------|-----------|
 | h                                | Reserved                        | RFC8949   |
 | b32                              | Reserved                        | RFC8949   |
@@ -251,12 +306,8 @@ application-extension identifiers, with the initial content shown in
 | b64                              | Reserved                        | RFC8949   |
 | cri                              | Constrained Resource Identifier | RFCthis   |
 | dt                               | Date/Time                       | RFCthis   |
-{: #tab-iana title="Initial Content of application extension
-identifier registry"}
-
-[^todo1]
-
-[^todo1]: (Define policy: probably specification required?; detailed template)
+{: #tab-iana title="Initial Content of Application-extension
+Identifier Registry"}
 
 
 
