@@ -52,6 +52,7 @@ normative:
   RFC3986: uri
   RFC3987: iri
   RFC9165: controls
+  IANA.cbor-tags: tags
   BCP26:
     -: ianacons
     =: RFC8126
@@ -246,6 +247,40 @@ is equivalent to
 
 See {{dt-grammar}} for an ABNF definition for the content of DT literals.
 
+Handling unknown application-extension identifiers {#unknown}
+==================================================
+
+When ingesting CBOR diagnostic notation, any
+application-oriented extension literals are usually decoded and
+transformed into the corresponding data item during ingestion.
+If an application-extension is not known or not implemented by the
+ingesting process, this is usually an error and processing has to
+stop.
+
+However, in certain cases, it can be desirable to exceptionally carry an
+uninterpreted application-oriented extension literal in an ingested
+data item, allowing to postpone its decoding to a specific later
+stage of ingestion.
+
+This specification defines a CBOR Tag for this purpose:
+The Diagnostic Notation Unresolved Application-Extension Tag, tag
+number CPA999 ({{dnuae}}).
+The content of this tag is an array of two text strings: The
+application-extension identifier, and the (escape-processed) content
+of the single-quoted string.
+For example, `dt'1969-07-21T02:56:16Z'` can be provisionally represented as
+`/CPA/ 999(["dt", "1969-07-21T02:56:16Z"])`.
+
+[^cpa]
+
+[^cpa]: RFC-Editor: This document uses the CPA (code point allocation)
+      convention described in [I-D.bormann-cbor-draft-numbers].  For
+      each usage of the term "CPA", please remove the prefix "CPA"
+      from the indicated value and replace the residue with the value
+      assigned by IANA; perform an analogous substitution for all other
+      occurrences of the prefix "CPA" in the document.  Finally,
+      please remove this note.
+
 IANA Considerations {#sec-iana}
 ===================
 
@@ -396,6 +431,19 @@ Parameters" Registry {{IANA.core-parameters}}, as follows:
 {: align="left" title="New Content-Format"}
 
 TBD1 is to be assigned from the space 256..999.
+
+## Diagnostic Notation Unresolved Application-Extension Tag {#dnuae}
+
+[^cpa]
+
+In the "CBOR Tags" registry {{-tags}}, IANA is requested to assign the
+tag in {{tab-tag-values}} from the "specification required" space
+(suggested assignment: 999), with the present document as the
+specification reference.
+
+| Tag    | Data Item | Semantics                                            | Reference  |
+| CPA999 | array     | Diagnostic Notation Unresolved Application-Extension | \[RFCthis] |
+{: #tab-tag-values cols='r l l' title="Values for Tags"}
 
 
 Security considerations {#seccons}
