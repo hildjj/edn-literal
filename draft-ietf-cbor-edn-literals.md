@@ -472,7 +472,16 @@ This syntax accommodates both lower case and upper case hex digits, as
 well as blank space (including comments) around each hex digit.
 
 ~~~ abnf
-app-string-h    = S *(HEXDIG S HEXDIG S)
+app-string-h    = S *(HEXDIG S HEXDIG S / ellipsis S)
+ellipsis        = 3*"."
+HEXDIG          = DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
+DIGIT           = %x30-39 ; 0-9
+blank           = %x09 / %x0A / %x0D / %x20
+non-slash       = blank / %x21-2e / %x30-10FFFF
+non-lf          = %x09 / %x0D / %x20-D7FF / %xE000-10FFFF
+S               = *blank *(comment *blank )
+comment         = "/" *non-slash "/"
+                / "#" *non-lf %x0A
 ~~~
 {: #abnf-grammar-h sourcecode-name="cbor-edn-h.abnf"
 title="ABNF Definition of Hexadecimal Representation of a Byte String"
