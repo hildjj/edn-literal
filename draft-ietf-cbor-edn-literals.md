@@ -141,6 +141,62 @@ The term "CDDL" refers to the data definition language defined in
 {{-cddl}} and its registered extensions (such as those in {{RFC9165}}), as
 well as {{-cddlupd}}.
 
+## (Non-)Objectives of this Document
+
+{{Section 8 of -cbor}} states the objective of defining a
+human-readable diagnostic notation with CBOR.
+In particular, it states:
+
+{:quote}
+> All actual interchange always happens in the binary format.
+
+One important application of EDN is the notation of CBOR data for
+humans: in specifications, on whiteboards, and for entering test data.
+A number of features, such as comments in string literals, are mainly
+useful for people-to-people communication via EDN.
+Programs also often output EDN for diagnostic purposes, such as in
+error messages or to enable comparison (including generation of diffs
+via tools) with test data.
+
+For comparison with test data, it is often useful if different
+implementations generate the same (or similar) output for the same
+CBOR data items.
+This is comparable to the objectives of deterministic serialization
+for CBOR data items themselves ({{Section 4.2 of -cbor}}).
+However, there are even more representation variants in EDN than in
+binary CBOR, and there is little point in specifically endorsing a
+single variant as "deterministic" when other variants may be more
+useful for human understanding, e.g., the `<< >>` notation as
+opposed to `h''`; an EDN generator may have quite a few options
+that control what presentation variant is most desirable for the
+application that it is being used for.
+
+Because of this, a deterministic representation is not defined for
+EDN, and there is little expectation of "roundtripping": the ability
+to convert EDN to binary CBOR and back to EDN while achieving exactly
+the same result as the original input EDN, which possibly was created
+by humans or by a different EDN generator.
+
+However, there is a certain expectation that EDN generators can be
+configured to some basic output format, which:
+
+* looks like JSON where that is possible;
+* inserts encoding indicators only where the binary form differs from
+  preferred encoding;
+* uses hexadecimal representation (`h''`) for byte strings, not
+  `b64''` or embedded CBOR (`<<>>`);
+* does not generate elaborate blank space (newlines, indentation) for
+  pretty-printing, but does use common blank spaces such as after `,`
+  and `:`.
+
+Additional features such as ensuring deterministic map ordering
+({{Section 4.2 of -cbor}}) on output, or even deviating from the basic
+configuration in some systematic way, can further assist in comparing
+test data.
+Information obtained from a CDDL model can help in choosing
+application-oriented literals or specific string representations such
+as embedded CBOR or `b64''` in the appropriate places.
+
 Application-Oriented Extension Literals
 =======================================
 
