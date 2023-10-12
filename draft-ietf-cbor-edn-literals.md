@@ -247,8 +247,25 @@ is equivalent to
 
 See {{dt-grammar}} for an ABNF definition for the content of DT literals.
 
+Stand-in Representations in Binary CBOR {#stand-in}
+=======================================
+
+In some cases, an EDN consumer cannot construct actual CBOR items that
+represent the CBOR data intended for eventual interchange.
+This document defines stand-in representation for two such cases:
+
+* The EDN consumer does not know (or does not implement) an
+  application-extension identifier used in the EDN document
+  ({{unknown}}) but wants to preserve the information for a later
+  processor.
+
+* The generator of some EDN intended for human consumption (such as in
+  a specification document) may not want to include parts of the final
+  data item, destructively replacing complete subtrees or possibly
+  just parts of a lengthy string by _elisions_ ({{elision}}).
+
 Handling unknown application-extension identifiers {#unknown}
-==================================================
+--------------------------------------------------
 
 When ingesting CBOR diagnostic notation, any
 application-oriented extension literals are usually decoded and
@@ -264,7 +281,7 @@ stage of ingestion.
 
 This specification defines a CBOR Tag for this purpose:
 The Diagnostic Notation Unresolved Application-Extension Tag, tag
-number CPA999 ({{dnuae}}).
+number CPA999 ({{iana-standin}}).
 The content of this tag is an array of two text strings: The
 application-extension identifier, and the (escape-processed) content
 of the single-quoted string.
@@ -280,6 +297,93 @@ For example, `dt'1969-07-21T02:56:16Z'` can be provisionally represented as
       assigned by IANA; perform an analogous substitution for all other
       occurrences of the prefix "CPA" in the document.  Finally,
       please remove this note.
+
+Handling information deliberately elided from an EDN document {#elision}
+-------------------------------------------------------------
+
+EDN supports the use of an _ellipsis_ (notated as three or more dots
+in a row, as in `...`) to indicate parts of an EDN document that have
+been elided (and therefore cannot be reconstructed).
+
+This specification defines a CBOR Tag for this purpose:
+The Diagnostic Notation Ellipsis Tag, tag number CPA888 ({{iana-standin}}).
+The content of this tag either is
+
+1. null (indicating a data item entirely replaced by an ellipsis), or it is
+2. an array, the elements of which are alternating between fragments
+   of a string and the actual elisions, represented as ellipses
+   carrying a null as content.
+
+Elisions can stand in for entire subtrees, e.g. in:
+
+~~~ cbor-diag
+[1, 2, ..., 3]
+,
+{ "a": 1,
+  "b": ...,
+  ...: ...
+}
+~~~
+
+A single ellipsis (or key/value pair of ellipses) can imply eliding
+multiple elements in an array (members in a map); if more detailed
+control is required, a data definition language such as CDDL can be
+employed.
+(Note that the stand-in form defined here does not allow multiple
+key/value pairs with an ellipsis as a key as the CBOR data item would
+not be valid.)
+
+Subtree elisions can be represented in a CBOR data item by using
+`/CPA/888(null)` as the stand-in:
+
+~~~ cbor-diag
+[1, 2, 888(null), 3]
+,
+{ "a": 1,
+  "b": 888(null),
+  888(null): 888(null)
+}
+~~~
+
+Elisions also can be used as part of a (text or byte) string:
+
+~~~ cbor-diag
+{ "contract": "Herewith I buy" ... "gned: Alice & Bob",
+  "signature": h'4711...0815',
+}
+~~~
+
+The example "contract" uses string concatenation as per {{Section G.4
+of -cddl}}, extending that by allowing ellipses; while the example
+"signature" uses special syntax that allows the use of ellipses
+between the bytes notated _inside_ `h''` literals.
+
+String elisions can be represented in a CBOR data item by a stand-in
+that wraps an array of string fragments alternating with ellipsis
+indicators:
+
+~~~ cbor-diag
+{ "contract": /CPA/888(["Herewith I buy", 888(null), 888("gned: Alice & Bob")]),
+  "signature": 888([h'4711', 888(null), h'0815']),
+}
+~~~
+
+Note that the use of elisions is different from "commenting out" EDN
+text, e.g.
+
+
+~~~ cbor-diag
+{ "contract": "Herewith I buy" /.../ "gned: Alice & Bob",
+  "signature": h'4711/.../0815',
+  # ...: ...
+}
+~~~
+
+The consumer of this EDN will ignore the comments and therefore will
+have no idea after ingestion that some information has been elided;
+validation steps may then simply fail instead of being informed about
+the elisions.
+
 
 IANA Considerations {#sec-iana}
 ===================
@@ -432,17 +536,18 @@ Parameters" Registry {{IANA.core-parameters}}, as follows:
 
 TBD1 is to be assigned from the space 256..999.
 
-## Diagnostic Notation Unresolved Application-Extension Tag {#dnuae}
+## Stand-in Tags {#iana-standin}
 
 [^cpa]
 
 In the "CBOR Tags" registry {{-tags}}, IANA is requested to assign the
-tag in {{tab-tag-values}} from the "specification required" space
-(suggested assignment: 999), with the present document as the
+tags in {{tab-tag-values}} from the "specification required" space
+(suggested assignments: 888 and 999), with the present document as the
 specification reference.
 
-| Tag    | Data Item | Semantics                                            | Reference  |
-| CPA999 | array     | Diagnostic Notation Unresolved Application-Extension | \[RFCthis] |
+| Tag    | Data Item     | Semantics                                            | Reference  |
+| CPA888 | null or array | Diagnostic Notation Ellipsis                         | \[RFCthis] |
+| CPA999 | array         | Diagnostic Notation<br>Unresolved Application-Extension | \[RFCthis] |
 {: #tab-tag-values cols='r l l' title="Values for Tags"}
 
 
