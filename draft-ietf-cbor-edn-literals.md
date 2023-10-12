@@ -141,6 +141,62 @@ The term "CDDL" refers to the data definition language defined in
 {{-cddl}} and its registered extensions (such as those in {{RFC9165}}), as
 well as {{-cddlupd}}.
 
+## (Non-)Objectives of this Document
+
+{{Section 8 of -cbor}} states the objective of defining a
+human-readable diagnostic notation with CBOR.
+In particular, it states:
+
+{:quote}
+> All actual interchange always happens in the binary format.
+
+One important application of EDN is the notation of CBOR data for
+humans: in specifications, on whiteboards, and for entering test data.
+A number of features, such as comments in string literals, are mainly
+useful for people-to-people communication via EDN.
+Programs also often output EDN for diagnostic purposes, such as in
+error messages or to enable comparison (including generation of diffs
+via tools) with test data.
+
+For comparison with test data, it is often useful if different
+implementations generate the same (or similar) output for the same
+CBOR data items.
+This is comparable to the objectives of deterministic serialization
+for CBOR data items themselves ({{Section 4.2 of -cbor}}).
+However, there are even more representation variants in EDN than in
+binary CBOR, and there is little point in specifically endorsing a
+single variant as "deterministic" when other variants may be more
+useful for human understanding, e.g., the `<< >>` notation as
+opposed to `h''`; an EDN generator may have quite a few options
+that control what presentation variant is most desirable for the
+application that it is being used for.
+
+Because of this, a deterministic representation is not defined for
+EDN, and there is little expectation of "roundtripping": the ability
+to convert EDN to binary CBOR and back to EDN while achieving exactly
+the same result as the original input EDN, which possibly was created
+by humans or by a different EDN generator.
+
+However, there is a certain expectation that EDN generators can be
+configured to some basic output format, which:
+
+* looks like JSON where that is possible;
+* inserts encoding indicators only where the binary form differs from
+  preferred encoding;
+* uses hexadecimal representation (`h''`) for byte strings, not
+  `b64''` or embedded CBOR (`<<>>`);
+* does not generate elaborate blank space (newlines, indentation) for
+  pretty-printing, but does use common blank spaces such as after `,`
+  and `:`.
+
+Additional features such as ensuring deterministic map ordering
+({{Section 4.2 of -cbor}}) on output, or even deviating from the basic
+configuration in some systematic way, can further assist in comparing
+test data.
+Information obtained from a CDDL model can help in choosing
+application-oriented literals or specific string representations such
+as embedded CBOR or `b64''` in the appropriate places.
+
 Application-Oriented Extension Literals
 =======================================
 
@@ -345,6 +401,57 @@ entries have the Change Controller "IETF".
 Identifier Registry"}
 
 
+## Encoding Indicators {#reg-ei}
+
+IANA is requested to create an "Encoding Indicators"
+registry in the newly created "CBOR Diagnostic Notation" registry group
+\[IANA.cbor-diagnostic-notation], with the policy "specification required"
+({{Section 4.6 of -ianacons}}).
+
+The experts are instructed to be frugal in the allocation of
+encoding indicators that are suggestive of generally applicable semantics,
+keeping them in reserve for encoding indicator registrations that are likely to enjoy wide
+use and can make good use of their conciseness.
+If the expert becomes aware of encoding indicators that are deployed and
+in use, they may also solicit a specification and initiate a registration on their own if
+they deem such a registration can avert potential future collisions.
+{: #de-instructions-ei}
+
+Each entry in the registry must include:
+
+{:vspace}
+Encoding Indicator:
+: an ASCII {{-ascii}} string that starts with an underscore letter and
+  can contain zero or more underscores, letters and digits after that
+  (`_[_A-Za-z0-9]*`). No other entry in the registry can have the same
+  Encoding Indicator.
+
+Description:
+: a brief description
+
+Change Controller:
+: (see {{Section 2.3 of -ianacons}})
+
+Reference:
+: a reference document that provides a description of the
+  application-extension identifier
+
+
+The initial content of the registry is shown in {{tab-iana-ei}}; all
+entries have the Change Controller "IETF".
+
+| Encoding Indicator | Description                        | Reference        |
+|--------------------+------------------------------------+------------------|
+| _                  | Indefinite Length Encoding (ai=31) | RFC8949, RFCthis |
+| _i                 | ai=0 to ai=23                      | RFCthis          |
+| _0                 | ai=24                              | RFC8949, RFCthis |
+| _1                 | ai=25                              | RFC8949, RFCthis |
+| _2                 | ai=26                              | RFC8949, RFCthis |
+| _3                 | ai=27                              | RFC8949, RFCthis |
+{: #tab-iana-ei title="Initial Content of Encoding Indicator Registry"}
+
+
+
 
 ## Media Type
 
@@ -499,6 +606,29 @@ The following additional items should help in the interpretation:
   optional part containing a "p" is present, in which case it stands
   for a floating point number in the usual hexadecimal notation (which
   uses a mantissa in hexadecimal and an exponent in decimal notation).
+* `spec` stands for an encoding indicator.
+  As per {{Section 8.1 of -cbor}}:
+
+  * an underscore `_` on its own stands
+    for indefinite length encoding (`ai=31`, only available behind the
+    opening brace/bracket for `map` and `array`: strings have a special
+    syntax `streamstring` for indefinite length encoding except for the
+    special cases ''_ and ""_), and
+  * `_0` to `_3` stand for `ai=24` to `ai=27`, respectively.
+
+  Surprisingly, {{Section 8.1 of -cbor}} does not address `ai=0` to
+  `ai=23` — the assumption seems to be that preferred serialization
+  (Section 4.1 of {{-cbor}}) will be used when converting CBOR
+  diagnostic notation to an encoded CBOR data item, so leaving out the
+  encoding indicator for a data item with a preferred serialization
+  will implicitly use `ai=0` to `ai=23` if that is possible.
+  The present specification allows to make this explicit:
+
+  * `_i` ("immediate") stands for encoding with `ai=0` to `ai=23`.
+
+  While no pressing use for further values for encoding indicators
+  comes to mind, this is an extension point for EDN; {{reg-ei}} defines
+  a registry for additional values.
 
 ABNF Definitions for app-string Content {#app-grammars}
 ---------------------------------------
