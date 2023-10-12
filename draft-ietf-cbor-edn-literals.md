@@ -317,7 +317,7 @@ Each entry in the registry must include:
 Application-Extension Identifier:
 : a lower case ASCII {{-ascii}} string that starts with a letter and can
   contain letters and digits after that (`[a-z][a-z0-9]*`). No other
-  entry in the registry can have the same function name.
+  entry in the registry can have the same application-extension identifier.
 
 Description:
 : a brief description
