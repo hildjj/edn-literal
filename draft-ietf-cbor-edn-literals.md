@@ -571,7 +571,7 @@ The following additional items should help in the interpretation:
   * A double underscore `__` stands for encoding with `ai=0` to `ai=23`.
 
   While no immediate use for further values for encoding indicators
-  comes to mind, this is an extension point for EDN; {reg-ei}} defines
+  comes to mind, this is an extension point for EDN; {{reg-ei}} defines
   a registry for additional values.
 
 ABNF Definitions for app-string Content {#app-grammars}
