@@ -387,7 +387,7 @@ entries have the Change Controller "IETF".
 | Encoding Indicator | Description                        | Reference        |
 |--------------------+------------------------------------+------------------|
 | _                  | Indefinite Length Encoding (ai=31) | RFC8949, RFCthis |
-| __                 | ai=0 to ai=23                      | RFCthis          |
+| _i                 | ai=0 to ai=23                      | RFCthis          |
 | _0                 | ai=24                              | RFC8949, RFCthis |
 | _1                 | ai=25                              | RFC8949, RFCthis |
 | _2                 | ai=26                              | RFC8949, RFCthis |
@@ -568,9 +568,9 @@ The following additional items should help in the interpretation:
   will implicitly use `ai=0` to `ai=23` if that is possible.
   The present specification allows to make this explicit:
 
-  * A double underscore `__` stands for encoding with `ai=0` to `ai=23`.
+  * `_i` ("immediate") stands for encoding with `ai=0` to `ai=23`.
 
-  While no immediate use for further values for encoding indicators
+  While no pressing use for further values for encoding indicators
   comes to mind, this is an extension point for EDN; {{reg-ei}} defines
   a registry for additional values.
 
