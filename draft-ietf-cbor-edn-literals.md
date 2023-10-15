@@ -52,6 +52,7 @@ normative:
   RFC3986: uri
   RFC3987: iri
   RFC9165: controls
+  RFC9164: iptag
   IANA.cbor-tags: tags
   BCP26:
     -: ianacons
@@ -225,11 +226,22 @@ characters that are either lower-case letters or digits (a-z0-9).
 
 Application-extension identifiers are registered in a registry
 ({{appext-iana}}).
+
 Prefixing a single-quoted string, an application-extension identifier
 is used to build an application-oriented extension literal, which
 stands for a CBOR data item the value of which is derived from the
 text given in the single-quoted string using a procedure defined in
 the specification for an application-extension identifier.
+
+An application-extension (such as `dt`) MAY also define the meaning of
+a variant of the application-extension identifier where each
+lower-case character is replaced by its upper-case counterpart (such
+as `DT`), for building an application-oriented extension literal using
+that all-uppercase variant as the prefix of a single-quoted string.
+
+As a convention for such definitions, using the all-uppercase variant
+implies making use of a tag appropriate for this application-oriented
+extension (such as tag number 1 for `DT`).
 
 Examples for application-oriented extensions to CBOR diagnostic
 notation can be found in the following sections.
@@ -241,7 +253,7 @@ interaction between tools is often smoother if media types can be used.
 
 
 The "cri" Extension {#cri}
-===================
+-------------------
 
 The application-extension identifier "cri" is used to notate a
 Constrained Resource Identifier literal as per {{-cri}}.
@@ -268,11 +280,11 @@ is equivalent to
 [-4, ["example", "com"], ["bottarga", "shaved"]]
 ~~~
 
-See {{cri-grammar}} for an ABNF definition for the content of CRI literals.
+See {{cri-grammar}} for an ABNF definition for the content of `cri` literals.
 
 
 The "dt" Extension {#dt}
-==================
+------------------
 
 The application-extension identifier "dt" is used to notate a
 date/time literal that can be used as an Epoch-Based Date/Time as per
@@ -287,21 +299,82 @@ Date/Time.
 If fractional seconds are given in the text (production
 `time-secfrac` in {{abnf-grammar-dt}}), the value is a
 floating-point number; the value is an integer number otherwise.
+In the all-upper-case variant of the app-prefix, the value is enclosed
+in a tag number 1.
 
 As an example, the CBOR diagnostic notation
 
 ~~~ cbor-diag
-[dt'1969-07-21T02:56:16Z',
- dt'1969-07-21T02:56:16.5Z']
+dt'1969-07-21T02:56:16Z',
+dt'1969-07-21T02:56:16.5Z',
+DT'1969-07-21T02:56:16Z'
 ~~~
 
 is equivalent to
 
 ~~~ cbor-diag
-[-14159024, -14159023.5]
+-14159024,
+-14159023.5,
+1(-14159024)
 ~~~
 
-See {{dt-grammar}} for an ABNF definition for the content of DT literals.
+See {{dt-grammar}} for an ABNF definition for the content of `dt` literals.
+
+
+The "ip" Extension {#ip}
+------------------
+
+The application-extension identifier "ip" is used to notate an IP
+address literal that can be used as an IP address as per {{Section 3 of
+-iptag}}.
+
+The text of the literal is an IPv4address or IPv6address as per
+{{Section 3.2.2 of -uri}}.
+
+With the lower-case app-string `ip`, the value of the literal is a
+byte string representing the binary IP address.
+With the upper-case app-string `IP`, the literal is such a byte string
+tagged with tag number 54, if an IPv6address is used, or tag number
+52, if an IPv4address is used.
+
+As an additional case, the upper-case app-string `IP''` can be used
+with a prefix such as `192.0.2.0/24`, with the equivalent tag as its value.
+(Note that {{-iptag}} representations of address prefixes need to
+implement the truncation of the address byte string as described in
+{{Section 4.2 of -iptag}}; see example below.)
+Note that there is no direct representation of an address combined
+with a prefix length; this can be represented as
+`52([ip'192.0.2.42',24])`, if needed.
+
+[^unwrapped-prefix]
+
+[^unwrapped-prefix]:Should `ip'192.0.2.0/24'` then be an unwrapped `[24,h'c00002']`?
+
+As an example, the CBOR diagnostic notation
+
+~~~ cbor-diag
+ip'192.0.2.42',
+IP'192.0.2.42',
+IP'192.0.2.0/24',
+ip'2001:db8::42',
+IP'2001:db8::42',
+IP'2001:db8::/64'
+~~~
+
+is equivalent to
+
+~~~ cbor-diag
+h'c000022a',
+52(h'c000022a'),
+52([24,h'c00002']),
+h'20010db8000000000000000000000042',
+54(h'20010db8000000000000000000000042'),
+54([64,h'20010db8'])
+~~~
+
+See {{ip-grammar}} for an ABNF definition for the content of `ip` literals.
+
+
 
 Handling unknown application-extension identifiers {#unknown}
 ==================================================
@@ -397,6 +470,7 @@ entries have the Change Controller "IETF".
 | b64                              | Reserved                        | RFC8949   |
 | cri                              | Constrained Resource Identifier | RFCthis   |
 | dt                               | Date/Time                       | RFCthis   |
+| ip                               | IP Address/Prefix               | RFCthis   |
 {: #tab-iana title="Initial Content of Application-extension
 Identifier Registry"}
 
@@ -441,7 +515,7 @@ The initial content of the registry is shown in {{tab-iana-ei}}; all
 entries have the Change Controller "IETF".
 
 | Encoding Indicator | Description                        | Reference        |
-|--------------------+------------------------------------+------------------|
+|--------------------|------------------------------------|------------------|
 | _                  | Indefinite Length Encoding (ai=31) | RFC8949, RFCthis |
 | _i                 | ai=0 to ai=23                      | RFCthis          |
 | _0                 | ai=24                              | RFC8949, RFCthis |
@@ -713,6 +787,41 @@ DIGIT           =  %x30-39 ; 0-9
 {: #abnf-grammar-dt sourcecode-name="cbor-edn-dt.abnf"
 title="ABNF Definition of RFC3339 Representation of a Date/Time"
 }
+
+
+### ip: ABNF Definition of Textual Representation of an IP Address {#ip-grammar}
+
+The syntax of the content of `ip` literals can be described by the
+ABNF for `IPv4address` and `IPv6address` in {{Section 3.2.2 of -uri}}, as reproduced
+in {{abnf-grammar-ip}}.
+
+~~~ abnf
+app-string-ip = IPv4address / IPv6address
+app-string-ip-uc = app-string-ip ["/" uint]
+
+; ABNF from RFC 3986:
+
+IPv6address   =                            6( h16 ":" ) ls32
+                 /                       "::" 5( h16 ":" ) ls32
+                 / [               h16 ] "::" 4( h16 ":" ) ls32
+                 / [ *1( h16 ":" ) h16 ] "::" 3( h16 ":" ) ls32
+                 / [ *2( h16 ":" ) h16 ] "::" 2( h16 ":" ) ls32
+                 / [ *3( h16 ":" ) h16 ] "::"    h16 ":"   ls32
+                 / [ *4( h16 ":" ) h16 ] "::"              ls32
+                 / [ *5( h16 ":" ) h16 ] "::"              h16
+                 / [ *6( h16 ":" ) h16 ] "::"
+
+h16           = 1*4HEXDIG
+ls32          = ( h16 ":" h16 ) / IPv4address
+IPv4address   = dec-octet "." dec-octet "." dec-octet "." dec-octet
+dec-octet     = DIGIT                 ; 0-9
+                 / %x31-39 DIGIT         ; 10-99
+                 / "1" 2DIGIT            ; 100-199
+                 / "2" %x30-34 DIGIT     ; 200-249
+                 / "25" %x30-35          ; 250-255
+~~~
+{: #abnf-grammar-ip sourcecode-name="cbor-edn-ip.abnf"
+title="ABNF Definition of Textual Representation of an IP Address"}
 
 
 ### cri: ABNF Definition of URI Representation of a CRI {#cri-grammar}
