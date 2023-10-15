@@ -342,15 +342,15 @@ with a prefix such as `192.0.2.0/24`, with the equivalent tag as its value.
 (Note that {{-iptag}} representations of address prefixes need to
 implement the truncation of the address byte string as described in
 {{Section 4.2 of -iptag}}; see example below.)
+For completeness, the lower-case variant `ip'192.0.2.0/24'` stands for
+an unwrapped `[24,h'c00002']`; however, in this case the information
+on whether an address is IPv4 or IPv6 often needs to come from the context.
+
 Note that there is no direct representation of an address combined
 with a prefix length; this can be represented as
 `52([ip'192.0.2.42',24])`, if needed.
 
-[^unwrapped-prefix]
-
-[^unwrapped-prefix]:Should `ip'192.0.2.0/24'` then be an unwrapped `[24,h'c00002']`?
-
-As an example, the CBOR diagnostic notation
+Examples: the CBOR diagnostic notation
 
 ~~~ cbor-diag
 ip'192.0.2.42',
