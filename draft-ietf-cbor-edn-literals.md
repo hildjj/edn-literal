@@ -735,6 +735,28 @@ The following additional items should help in the interpretation:
   comes to mind, this is an extension point for EDN; {{reg-ei}} defines
   a registry for additional values.
 
+* `string` and the rules preceding it in the same block realize both
+  the representation of strings that are split up into multiple chunks
+  {{Section G.4 of -cbor}} and the use of ellipses to represent elisions
+  [elision].  The semantic processing of these rules is relatively
+  complex:
+  * A single `...` is a general ellipsis, which can stand for any data
+    item.
+  * An ellipsis can be surrounded (on one or both sides) by string
+    chunks, the result is a CBOR tag number CPA888 that contains an
+    array with joined together spans of such chunks plus the ellipses
+    represented by `888(null)`.
+  * A simple sequence of string chunks is simply joined together.
+    In both cases of joining strings, the rules of {{Section G.4 of
+    -cbor}} need to be followed; in particular, if a text string
+    results from the joining operation, that result needs to be valid
+    UTF-8.
+  * Some of the strings may be app-strings.
+    If the type of the app-string is an actual string, joining of
+    chunked strings occurs as with directly notated strings; otherwise
+    the occurrence of more than one app-string or an app-string
+    together with a directly notated string cannot be processed.
+
 ABNF Definitions for app-string Content {#app-grammars}
 ---------------------------------------
 
@@ -755,7 +777,16 @@ This syntax accommodates both lower case and upper case hex digits, as
 well as blank space (including comments) around each hex digit.
 
 ~~~ abnf
-app-string-h    = S *(HEXDIG S HEXDIG S)
+app-string-h    = S *(HEXDIG S HEXDIG S / ellipsis S)
+ellipsis        = 3*"."
+HEXDIG          = DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
+DIGIT           = %x30-39 ; 0-9
+blank           = %x09 / %x0A / %x0D / %x20
+non-slash       = blank / %x21-2e / %x30-10FFFF
+non-lf          = %x09 / %x0D / %x20-D7FF / %xE000-10FFFF
+S               = *blank *(comment *blank )
+comment         = "/" *non-slash "/"
+                / "#" *non-lf %x0A
 ~~~
 {: #abnf-grammar-h sourcecode-name="cbor-edn-h.abnf"
 title="ABNF Definition of Hexadecimal Representation of a Byte String"
