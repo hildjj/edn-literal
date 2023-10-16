@@ -724,7 +724,17 @@ This syntax accommodates both lower case and upper case hex digits, as
 well as blank space (including comments) around each hex digit.
 
 ~~~ abnf
-app-string-h    = S *(HEXDIG S HEXDIG S)
+app-string-h    = S *(HEXDIG S HEXDIG S / ellipsis S)
+                  ["#" *non-lf]
+ellipsis        = 3*"."
+HEXDIG          = DIGIT / "A" / "B" / "C" / "D" / "E" / "F"
+DIGIT           = %x30-39 ; 0-9
+blank           = %x09 / %x0A / %x0D / %x20
+non-slash       = blank / %x21-2e / %x30-10FFFF
+non-lf          = %x09 / %x0D / %x20-D7FF / %xE000-10FFFF
+S               = *blank *(comment *blank )
+comment         = "/" *non-slash "/"
+                / "#" *non-lf %x0A
 ~~~
 {: #abnf-grammar-h sourcecode-name="cbor-edn-h.abnf"
 title="ABNF Definition of Hexadecimal Representation of a Byte String"
@@ -746,11 +756,14 @@ in-line comments in b64, as "/" is valid base64-classic.
 ~~~ abnf
 app-string-b64  = B *(4(b64dig B))
                   [b64dig B b64dig B ["=" B "=" / b64dig B ["="]] B]
+                  ["#" *inon-lf]
 b64dig          = ALPHA / DIGIT / "-" / "_" / "+" / "/"
 B               = *iblank *(icomment *iblank)
 iblank          = %x0A / %x20  ; Not HT or CR (gone)
 icomment        = "#" *inon-lf %x0A
 inon-lf         = %x20-D7FF / %xE000-10FFFF
+ALPHA           = %x41-5a / %x61-7a
+DIGIT           = %x30-39
 ~~~
 {: #abnf-grammar-b64 sourcecode-name="cbor-edn-b64.abnf"
 title="ABNF definition of Base64 Representation of a Byte String"
