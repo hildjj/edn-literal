@@ -494,7 +494,8 @@ that wraps an array of string fragments alternating with ellipsis
 indicators:
 
 ~~~ cbor-diag
-{ "contract": /CPA/888(["Herewith I buy", 888(null), "gned: Alice & Bob"]),
+{ "contract": /CPA/888(["Herewith I buy", 888(null),
+                        "gned: Alice & Bob"]),
   "signature": 888([h'4711', 888(null), h'0815']),
 }
 ~~~
