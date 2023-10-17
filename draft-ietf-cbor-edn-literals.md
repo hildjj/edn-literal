@@ -7,7 +7,7 @@ title: >
 abbrev: >
   CBOR EDN: Literals and ABNF
 docname: draft-ietf-cbor-edn-literals-latest
-date: 2023-10-01
+date: 2023-10-17
 
 keyword: Internet-Draft
 cat: info
@@ -141,6 +141,8 @@ language defined in {{-abnf}} as extended in {{-abnfcs}}, where the
 The term "CDDL" refers to the data definition language defined in
 {{-cddl}} and its registered extensions (such as those in {{RFC9165}}), as
 well as {{-cddlupd}}.
+
+{::boilerplate bcp14-tagged}
 
 ## (Non-)Objectives of this Document
 
@@ -492,7 +494,7 @@ that wraps an array of string fragments alternating with ellipsis
 indicators:
 
 ~~~ cbor-diag
-{ "contract": /CPA/888(["Herewith I buy", 888(null), 888("gned: Alice & Bob")]),
+{ "contract": /CPA/888(["Herewith I buy", 888(null), "gned: Alice & Bob"]),
   "signature": 888([h'4711', 888(null), h'0815']),
 }
 ~~~
@@ -737,10 +739,6 @@ Security considerations {#seccons}
 
 The security considerations of {{-cbor}} and {{-cddl}} apply.
 
-[^todo2]
-
-[^todo2]: Anything else meaningful to say here?
-
 --- back
 
 ABNF Definitions {#grammars}
@@ -811,8 +809,8 @@ The following additional items should help in the interpretation:
 
 * `string` and the rules preceding it in the same block realize both
   the representation of strings that are split up into multiple chunks
-  {{Section G.4 of -cbor}} and the use of ellipses to represent elisions
-  [elision].  The semantic processing of these rules is relatively
+  ({{Section G.4 of -cbor}}) and the use of ellipses to represent elisions
+  ({{elision}}).  The semantic processing of these rules is relatively
   complex:
   * A single `...` is a general ellipsis, which can stand for any data
     item.
@@ -932,8 +930,8 @@ title="ABNF Definition of RFC3339 Representation of a Date/Time"
 ### ip: ABNF Definition of Textual Representation of an IP Address {#ip-grammar}
 
 The syntax of the content of `ip` literals can be described by the
-ABNF for `IPv4address` and `IPv6address` in {{Section 3.2.2 of -uri}}, as reproduced
-in {{abnf-grammar-ip}}.
+ABNF for `IPv4address` and `IPv6address` in {{Section 3.2.2 of -uri}},
+as included in slightly updated form in {{abnf-grammar-ip}}.
 
 ~~~ abnf
 app-string-ip = IPaddress ["/" uint]
