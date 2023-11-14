@@ -47,7 +47,6 @@ normative:
    -: abnf
    =: RFC5234
   RFC7405: abnfcs
-  I-D.ietf-core-href: cri
   RFC3339: datetime
   RFC3986: uri
   RFC3987: iri
@@ -74,9 +73,10 @@ The Concise Binary Object Representation, CBOR (STD 94, RFC 8949), [^abs1-]
 
 [^abs3-]: This document specifies how to add application-oriented extensions to
     the diagnostic notation.  It then defines two such extensions for
-    text representations of epoch-based date/times and of Constrained Resource Identifiers
+    text representations of epoch-based date/times and of IP addresses
+    and prefixes
 
-​[^abs3-] (draft-ietf-core-href).
+​[^abs3-] (RFC 9164).
 
 [^abs4-]: To facilitate tool interoperation, this document also
      specifies a formal ABNF definition for extended diagnostic notation (EDN)
@@ -101,17 +101,11 @@ for representing CBOR constructs such as binary data and tags.
     not serve to create another interchange format, but enables the use of
     a shared diagnostic notation in tools for and in documents about CBOR.)
 
-[^abs3-] {{-cri}}.
+[^abs3-] {{-iptag}}.
 
 [^abs4-] (See {{grammar}} for an overall ABNF grammar as well as the
 ABNF definitions in {{app-grammars}} for grammars for both the
 byte string presentations predefined in {{-cbor}} and the application-extensions).
-
-[^cri-later]
-
-[^cri-later]: Note that {{cri}} and {{cri-grammar}} about CRIs may move to the {{-cri}}
-    specification, depending on the relative speed of approval; the
-    later document gets the section.
 
 ## Terminology
 
@@ -252,37 +246,6 @@ In addition, this document finally registers a media type identifier
 and a content-format for CBOR diagnostic notation.  This does not
 elevate its status as an interchange format, but recognizes that
 interaction between tools is often smoother if media types can be used.
-
-
-The "cri" Extension {#cri}
--------------------
-
-The application-extension identifier "cri" is used to notate a
-Constrained Resource Identifier literal as per {{-cri}}.
-
-The text of the literal is a URI Reference as per {{-uri}} or an IRI
-Reference as per {{-iri}}.
-
-The value of the literal is a CRI that can be converted to the text of
-the literal using the procedure of {{Section 6.1 of -cri}}.
-Note that there may be more than one CRI that can be converted to the
-URI/IRI given; implementations are expected to favor the simplest
-variant available and make non-surprising choices otherwise.
-
-
-As an example, the CBOR diagnostic notation
-
-~~~ cbor-diag
-cri'https://example.com/bottarga/shaved'
-~~~
-
-is equivalent to
-
-~~~ cbor-diag
-[-4, ["example", "com"], ["bottarga", "shaved"]]
-~~~
-
-See {{cri-grammar}} for an ABNF definition for the content of `cri` literals.
 
 
 The "dt" Extension {#dt}
@@ -522,7 +485,7 @@ IANA Considerations {#sec-iana}
 
 [^to-be-removed]
 
-[^to-be-removed]: RFC Editor: please replace RFCthis with the RFC
+[^to-be-removed]: RFC Editor: please replace RFC-XXXX with the RFC
     number of this RFC, \[IANA.cbor-diagnostic-notation] with a
     reference to the new registry group, and remove this note.
 
@@ -575,9 +538,8 @@ entries have the Change Controller "IETF".
 | b32                              | Reserved                        | RFC8949   |
 | h32                              | Reserved                        | RFC8949   |
 | b64                              | Reserved                        | RFC8949   |
-| cri                              | Constrained Resource Identifier | RFCthis   |
-| dt                               | Date/Time                       | RFCthis   |
-| ip                               | IP Address/Prefix               | RFCthis   |
+| dt                               | Date/Time                       | RFC-XXXX   |
+| ip                               | IP Address/Prefix               | RFC-XXXX   |
 {: #tab-iana title="Initial Content of Application-extension
 Identifier Registry"}
 
@@ -623,12 +585,12 @@ entries have the Change Controller "IETF".
 
 | Encoding Indicator | Description                        | Reference        |
 |--------------------|------------------------------------|------------------|
-| _                  | Indefinite Length Encoding (ai=31) | RFC8949, RFCthis |
-| _i                 | ai=0 to ai=23                      | RFCthis          |
-| _0                 | ai=24                              | RFC8949, RFCthis |
-| _1                 | ai=25                              | RFC8949, RFCthis |
-| _2                 | ai=26                              | RFC8949, RFCthis |
-| _3                 | ai=27                              | RFC8949, RFCthis |
+| _                  | Indefinite Length Encoding (ai=31) | RFC8949, RFC-XXXX |
+| _i                 | ai=0 to ai=23                      | RFC-XXXX          |
+| _0                 | ai=24                              | RFC8949, RFC-XXXX |
+| _1                 | ai=25                              | RFC8949, RFC-XXXX |
+| _2                 | ai=26                              | RFC8949, RFC-XXXX |
+| _3                 | ai=27                              | RFC8949, RFC-XXXX |
 {: #tab-iana-ei title="Initial Content of Encoding Indicator Registry"}
 
 
@@ -640,7 +602,7 @@ IANA is requested to add the following Media-Type to the "Media Types"
 registry {{!IANA.media-types}}.
 
 | Name            | Template                    | Reference              |
-| cbor-diagnostic | application/cbor-diagnostic | RFC XXXX, {{media-type}} |
+| cbor-diagnostic | application/cbor-diagnostic | RFC-XXXX, {{media-type}} |
 {: #new-media-type align="left" title="New Media Type application/cbor-diagnostic"}
 
 {:compact}
@@ -715,7 +677,7 @@ sub-registry, within the "Constrained RESTful Environments (CoRE)
 Parameters" Registry {{IANA.core-parameters}}, as follows:
 
 | Content-Type                | Content Coding | ID   | Reference |
-| application/cbor-diagnostic | -              | TBD1 | RFC XXXX  |
+| application/cbor-diagnostic | -              | TBD1 | RFC-XXXX  |
 {: align="left" title="New Content-Format"}
 
 TBD1 is to be assigned from the space 256..999.
@@ -729,9 +691,9 @@ tags in {{tab-tag-values}} from the "specification required" space
 (suggested assignments: 888 and 999), with the present document as the
 specification reference.
 
-| Tag    | Data Item     | Semantics                                            | Reference  |
-| CPA888 | null or array | Diagnostic Notation Ellipsis                         | \[RFCthis] |
-| CPA999 | array         | Diagnostic Notation<br>Unresolved Application-Extension | \[RFCthis] |
+| Tag    | Data Item     | Semantics                                            | Reference |
+| CPA888 | null or array | Diagnostic Notation Ellipsis                         | RFC-XXXX  |
+| CPA999 | array         | Diagnostic Notation<br>Unresolved Application-Extension | RFC-XXXX  |
 {: #tab-tag-values cols='r l l' title="Values for Tags"}
 
 
@@ -969,103 +931,6 @@ uint          = "0" / DIGIT1 *DIGIT
 {: #abnf-grammar-ip sourcecode-name="cbor-edn-ip.abnf"
 title="ABNF Definition of Textual Representation of an IP Address"}
 
-
-### cri: ABNF Definition of URI Representation of a CRI {#cri-grammar}
-
-The syntax of the content of `cri` literals can be described by the
-ABNF for `URI-reference` in {{Section 4.1 of -uri}}, as reproduced
-in {{abnf-grammar-cri}}.
-If the content is not ASCII only (i.e., for IRIs), first apply
-{{Section 3.1 of RFC3987}} and apply this grammar to the result.
-
-~~~ abnf
-app-string-cri = URI-reference
-; ABNF from RFC 3986:
-
-URI           = scheme ":" hier-part [ "?" query ] [ "#" fragment ]
-
-hier-part     = "//" authority path-abempty
-                 / path-absolute
-                 / path-rootless
-                 / path-empty
-
-URI-reference = URI / relative-ref
-
-absolute-URI  = scheme ":" hier-part [ "?" query ]
-
-relative-ref  = relative-part [ "?" query ] [ "#" fragment ]
-
-relative-part = "//" authority path-abempty
-                 / path-absolute
-                 / path-noscheme
-                 / path-empty
-
-scheme        = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
-
-authority     = [ userinfo "@" ] host [ ":" port ]
-userinfo      = *( unreserved / pct-encoded / sub-delims / ":" )
-host          = IP-literal / IPv4address / reg-name
-port          = *DIGIT
-
-IP-literal    = "[" ( IPv6address / IPvFuture  ) "]"
-
-IPvFuture     = "v" 1*HEXDIG "." 1*( unreserved / sub-delims / ":" )
-
-IPv6address   =                            6( h16 ":" ) ls32
-                 /                       "::" 5( h16 ":" ) ls32
-                 / [               h16 ] "::" 4( h16 ":" ) ls32
-                 / [ *1( h16 ":" ) h16 ] "::" 3( h16 ":" ) ls32
-                 / [ *2( h16 ":" ) h16 ] "::" 2( h16 ":" ) ls32
-                 / [ *3( h16 ":" ) h16 ] "::"    h16 ":"   ls32
-                 / [ *4( h16 ":" ) h16 ] "::"              ls32
-                 / [ *5( h16 ":" ) h16 ] "::"              h16
-                 / [ *6( h16 ":" ) h16 ] "::"
-
-h16           = 1*4HEXDIG
-ls32          = ( h16 ":" h16 ) / IPv4address
-IPv4address   = dec-octet "." dec-octet "." dec-octet "." dec-octet
-dec-octet     = DIGIT                 ; 0-9
-                 / %x31-39 DIGIT         ; 10-99
-                 / "1" 2DIGIT            ; 100-199
-                 / "2" %x30-34 DIGIT     ; 200-249
-                 / "25" %x30-35          ; 250-255
-
-reg-name      = *( unreserved / pct-encoded / sub-delims )
-
-path          = path-abempty    ; begins with "/" or is empty
-                 / path-absolute   ; begins with "/" but not "//"
-                 / path-noscheme   ; begins with a non-colon segment
-                 / path-rootless   ; begins with a segment
-                 / path-empty      ; zero characters
-
-path-abempty  = *( "/" segment )
-path-absolute = "/" [ segment-nz *( "/" segment ) ]
-path-noscheme = segment-nz-nc *( "/" segment )
-path-rootless = segment-nz *( "/" segment )
-path-empty    = 0<pchar>
-
-segment       = *pchar
-segment-nz    = 1*pchar
-segment-nz-nc = 1*( unreserved / pct-encoded / sub-delims / "@" )
-                 ; non-zero-length segment without any colon ":"
-
-pchar         = unreserved / pct-encoded / sub-delims / ":" / "@"
-
-query         = *( pchar / "/" / "?" )
-
-fragment      = *( pchar / "/" / "?" )
-
-pct-encoded   = "%" HEXDIG HEXDIG
-
-unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
-reserved      = gen-delims / sub-delims
-gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
-sub-delims    = "!" / "$" / "&" / "'" / "(" / ")"
-                 / "*" / "+" / "," / ";" / "="
-~~~
-{: #abnf-grammar-cri sourcecode-name="cbor-edn-cri.abnf"
-title="ABNF Definition of URI Representation of a CRI"
-}
 
 EDN and CDDL
 ============
