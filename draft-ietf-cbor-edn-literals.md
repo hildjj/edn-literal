@@ -7,7 +7,7 @@ title: >
 abbrev: >
   CBOR EDN: Literals and ABNF
 docname: draft-ietf-cbor-edn-literals-latest
-date: 2023-10-17
+date: 2023-11-20
 
 keyword: Internet-Draft
 cat: info
@@ -49,7 +49,6 @@ normative:
   RFC7405: abnfcs
   RFC3339: datetime
   RFC3986: uri
-  RFC3987: iri
   RFC9165: controls
   RFC9164: iptag
   IANA.cbor-tags: tags
@@ -424,7 +423,7 @@ multiple elements in an array (members in a map); if more detailed
 control is required, a data definition language such as CDDL can be
 employed.
 (Note that the stand-in form defined here does not allow multiple
-key/value pairs with an ellipsis as a key as the CBOR data item would
+key/value pairs with an ellipsis as a key: the CBOR data item would
 not be valid.)
 
 Subtree elisions can be represented in a CBOR data item by using
@@ -530,7 +529,7 @@ Reference:
 
 
 The initial content of the registry is shown in {{tab-iana}}; all
-entries have the Change Controller "IETF".
+initial entries have the Change Controller "IETF".
 
 | Application-extension Identifier | Description                     | Reference |
 |----------------------------------|---------------------------------|-----------|
@@ -581,7 +580,7 @@ Reference:
 
 
 The initial content of the registry is shown in {{tab-iana-ei}}; all
-entries have the Change Controller "IETF".
+initial entries have the Change Controller "IETF".
 
 | Encoding Indicator | Description                        | Reference        |
 |--------------------|------------------------------------|------------------|
@@ -1014,7 +1013,7 @@ Acknowledgements
 {: numbered="no"}
 
 The concept of application-oriented extensions to diagnostic notation,
-as well as the definition for the "dt" extension were inspired by the
+as well as the definition for the "dt" extension, were inspired by the
 CoRAL work by Klaus Hartke.
 
 <!--  LocalWords:  dedenting dedented
