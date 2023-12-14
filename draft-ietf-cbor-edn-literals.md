@@ -67,7 +67,8 @@ The Concise Binary Object Representation, CBOR (STD 94, RFC 8949), [^abs1-]
 
 ​[^abs3-] (RFC 9164).
 
-[^abs4-]: To facilitate tool interoperation, this document also
+[^abs4-]: A few further additions close some gaps in usability.
+     To facilitate tool interoperation, this document
      specifies a formal ABNF definition for extended diagnostic notation (EDN)
      that accommodates application-oriented literals.
 
