@@ -159,10 +159,11 @@ that control what presentation variant is most desirable for the
 application that it is being used for.
 
 Because of this, a deterministic representation is not defined for
-EDN, and there is little expectation of "roundtripping": the ability
+EDN, and there is no expectation for "roundtripping" from EDN to
+CBOR and back, i.e., for an ability
 to convert EDN to binary CBOR and back to EDN while achieving exactly
-the same result as the original input EDN, which possibly was created
-by humans or by a different EDN generator.
+the same result as the original input EDN — the original EDN possibly
+was created by humans or by a different EDN generator.
 
 However, there is a certain expectation that EDN generators can be
 configured to some basic output format, which:
