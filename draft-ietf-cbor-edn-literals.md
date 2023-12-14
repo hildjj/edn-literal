@@ -34,30 +34,20 @@ venue:
   latest: "https://cbor-wg.github.io/edn-literal/"
 
 normative:
-  STD94:
-    -: cbor
-    =: RFC8949
+  STD94: cbor
   RFC8610: cddl
   I-D.ietf-cbor-update-8610-grammar: cddlupd
   RFC8742: seq
-  STD90:
-    -: json
-    =: RFC8259
-  STD68:
-   -: abnf
-   =: RFC5234
+  STD90: json
+  STD68: abnf
   RFC7405: abnfcs
   RFC3339: datetime
   RFC3986: uri
   RFC9165: controls
   RFC9164: iptag
   IANA.cbor-tags: tags
-  BCP26:
-    -: ianacons
-    =: RFC8126
-  STD80:
-    -: ascii
-    =: RFC20
+  BCP26: ianacons
+  STD80: ascii
 informative:
   RFC4648: base
   IANA.core-parameters:
@@ -90,7 +80,7 @@ Introduction        {#intro}
 ============
 
 For the Concise Binary Object Representation, CBOR,
-{{Section 8 of -cbor}} in conjunction with {{Appendix G of -cddl}}
+{{Section 8 of RFC8949@-cbor}} in conjunction with {{Appendix G of -cddl}}
 [^abs1-]
 Diagnostic notation syntax is based on JSON, with extensions
 for representing CBOR constructs such as binary data and tags.
@@ -108,7 +98,7 @@ byte string presentations predefined in {{-cbor}} and the application-extensions
 
 ## Terminology
 
-{{Section 8 of -cbor}} defines the original CBOR diagnostic notation,
+{{Section 8 of RFC8949@-cbor}} defines the original CBOR diagnostic notation,
 and {{Appendix G of -cddl}} supplies a number of extensions to the
 diagnostic notation that result in the Extended Diagnostic Notation
 (EDN).
@@ -121,7 +111,7 @@ situations where backward compatibility would pose a significant
 obstacle, there is little point in not using these extensions.
 
 Therefore, when we refer to "_diagnostic notation_", we mean to
-include the original notation from {{Section 8 of -cbor}} as well as the
+include the original notation from {{Section 8 of RFC8949@-cbor}} as well as the
 extensions from {{Appendix G of -cddl}}, {{Section 4.2 of -seq}}, and the
 present document.
 However, we stick to the abbreviation "_EDN_" as it has become quite
@@ -130,7 +120,7 @@ popular and is more sharply distinguishable from other meanings than
 
 In a similar vein, the term "ABNF" in this document refers to the
 language defined in {{-abnf}} as extended in {{-abnfcs}}, where the
-"characters" of {{Section 2.3 of -abnf}} are Unicode scalar values.
+"characters" of {{Section 2.3 of RFC5234@-abnf}} are Unicode scalar values.
 The term "CDDL" refers to the data definition language defined in
 {{-cddl}} and its registered extensions (such as those in {{RFC9165}}), as
 well as {{-cddlupd}}.
@@ -139,7 +129,7 @@ well as {{-cddlupd}}.
 
 ## (Non-)Objectives of this Document
 
-{{Section 8 of -cbor}} states the objective of defining a
+{{Section 8 of RFC8949@-cbor}} states the objective of defining a
 human-readable diagnostic notation with CBOR.
 In particular, it states:
 
@@ -158,7 +148,7 @@ For comparison with test data, it is often useful if different
 implementations generate the same (or similar) output for the same
 CBOR data items.
 This is comparable to the objectives of deterministic serialization
-for CBOR data items themselves ({{Section 4.2 of -cbor}}).
+for CBOR data items themselves ({{Section 4.2 of RFC8949@-cbor}}).
 However, there are even more representation variants in EDN than in
 binary CBOR, and there is little point in specifically endorsing a
 single variant as "deterministic" when other variants may be more
@@ -186,7 +176,7 @@ configured to some basic output format, which:
   and `:`.
 
 Additional features such as ensuring deterministic map ordering
-({{Section 4.2 of -cbor}}) on output, or even deviating from the basic
+({{Section 4.2 of RFC8949@-cbor}}) on output, or even deviating from the basic
 configuration in some systematic way, can further assist in comparing
 test data.
 Information obtained from a CDDL model can help in choosing
@@ -199,7 +189,7 @@ Application-Oriented Extension Literals
 This document extends the syntax used in diagnostic notation for byte
 string literals to also be available for application-oriented extensions.
 
-As per {{Section 8 of -cbor}}, the diagnostic notation can notate byte
+As per {{Section 8 of RFC8949@-cbor}}, the diagnostic notation can notate byte
 strings in a number of {{-base}} base encodings, where the encoded text
 is enclosed in single quotes, prefixed by an identifier (»h« for
 base16, »b32« for base32, »h32« for base32hex, »b64« for base64 or
@@ -252,10 +242,10 @@ The "dt" Extension {#dt}
 
 The application-extension identifier "dt" is used to notate a
 date/time literal that can be used as an Epoch-Based Date/Time as per
-{{Section 3.4.2 of -cbor}}.
+{{Section 3.4.2 of RFC8949@-cbor}}.
 
 The text of the literal is a Standard Date/Time String as per
-{{Section 3.4.1 of -cbor}}.
+{{Section 3.4.1 of RFC8949@-cbor}}.
 
 The value of the literal is a number representing the result of a
 conversion of the given Standard Date/Time String to an Epoch-Based
@@ -494,14 +484,14 @@ IANA Considerations {#sec-iana}
 IANA is requested to create an "Application-Extension Identifiers"
 registry in a new "CBOR Diagnostic Notation" registry group
 \[IANA.cbor-diagnostic-notation], with the policy "expert review"
-({{Section 4.5 of -ianacons}}).
+({{Section 4.5 of RFC8126@-ianacons}}).
 
 The experts are instructed to be frugal in the allocation of
 application-extension identifiers that are suggestive of generally applicable semantics,
 keeping them in reserve for application-extensions that are likely to enjoy wide
 use and can make good use of their conciseness.
 The expert is also instructed to direct the registrant to provide a
-specification ({{Section 4.6 of -ianacons}}), but can make exceptions,
+specification ({{Section 4.6 of RFC8126@-ianacons}}), but can make exceptions,
 for instance when a specification is not available at the time of
 registration but is likely forthcoming.
 If the expert becomes aware of application-extension identifiers that are deployed and
@@ -521,7 +511,7 @@ Description:
 : a brief description
 
 Change Controller:
-: (see {{Section 2.3 of -ianacons}})
+: (see {{Section 2.3 of RFC8126@-ianacons}})
 
 Reference:
 : a reference document that provides a description of the
@@ -548,7 +538,7 @@ Identifier Registry"}
 IANA is requested to create an "Encoding Indicators"
 registry in the newly created "CBOR Diagnostic Notation" registry group
 \[IANA.cbor-diagnostic-notation], with the policy "specification required"
-({{Section 4.6 of -ianacons}}).
+({{Section 4.6 of RFC8126@-ianacons}}).
 
 The experts are instructed to be frugal in the allocation of
 encoding indicators that are suggestive of generally applicable semantics,
@@ -572,7 +562,7 @@ Description:
 : a brief description
 
 Change Controller:
-: (see {{Section 2.3 of -ianacons}})
+: (see {{Section 2.3 of RFC8126@-ianacons}})
 
 Reference:
 : a reference document that provides a description of the
@@ -746,7 +736,7 @@ The following additional items should help in the interpretation:
   for a floating point number in the usual hexadecimal notation (which
   uses a mantissa in hexadecimal and an exponent in decimal notation).
 * `spec` stands for an encoding indicator.
-  As per {{Section 8.1 of -cbor}}:
+  As per {{Section 8.1 of RFC8949@-cbor}}:
 
   * an underscore `_` on its own stands
     for indefinite length encoding (`ai=31`, only available behind the
@@ -755,9 +745,9 @@ The following additional items should help in the interpretation:
     special cases ''_ and ""_), and
   * `_0` to `_3` stand for `ai=24` to `ai=27`, respectively.
 
-  Surprisingly, {{Section 8.1 of -cbor}} does not address `ai=0` to
+  Surprisingly, {{Section 8.1 of RFC8949@-cbor}} does not address `ai=0` to
   `ai=23` — the assumption seems to be that preferred serialization
-  (Section 4.1 of {{-cbor}}) will be used when converting CBOR
+  ({{Section 4.1 of RFC8949@-cbor}}) will be used when converting CBOR
   diagnostic notation to an encoded CBOR data item, so leaving out the
   encoding indicator for a data item with a preferred serialization
   will implicitly use `ai=0` to `ai=23` if that is possible.
@@ -771,7 +761,7 @@ The following additional items should help in the interpretation:
 
 * `string` and the rules preceding it in the same block realize both
   the representation of strings that are split up into multiple chunks
-  ({{Section G.4 of -cbor}}) and the use of ellipses to represent elisions
+  ({{Section G.4 of RFC8949@-cbor}}) and the use of ellipses to represent elisions
   ({{elision}}).  The semantic processing of these rules is relatively
   complex:
   * A single `...` is a general ellipsis, which can stand for any data
@@ -782,7 +772,7 @@ The following additional items should help in the interpretation:
     represented by `888(null)`.
   * A simple sequence of string chunks is simply joined together.
     In both cases of joining strings, the rules of {{Section G.4 of
-    -cbor}} need to be followed; in particular, if a text string
+    RFC8949@-cbor}} need to be followed; in particular, if a text string
     results from the joining operation, that result needs to be valid
     UTF-8.
   * Some of the strings may be app-strings.
