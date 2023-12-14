@@ -97,6 +97,11 @@ for representing CBOR constructs such as binary data and tags.
 ABNF definitions in {{app-grammars}} for grammars for both the
 byte string presentations predefined in {{-cbor}} and the application-extensions).
 
+In addition, this document finally registers a media type identifier
+and a content-format for CBOR diagnostic notation.  This does not
+elevate its status as an interchange format, but recognizes that
+interaction between tools is often smoother if media types can be used.
+
 ## Terminology
 
 {{Section 8 of RFC8949@-cbor}} defines the original CBOR diagnostic notation,
@@ -232,11 +237,6 @@ extension (such as tag number 1 for `DT`).
 
 Examples for application-oriented extensions to CBOR diagnostic
 notation can be found in the following sections.
-
-In addition, this document finally registers a media type identifier
-and a content-format for CBOR diagnostic notation.  This does not
-elevate its status as an interchange format, but recognizes that
-interaction between tools is often smoother if media types can be used.
 
 
 The "dt" Extension {#dt}
