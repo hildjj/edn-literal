@@ -661,10 +661,16 @@ Person & email address to contact for further information:
   or IETF Applications and Real-Time Area (art@ietf.org)
 
 Intended usage:
-: COMMON
+: LIMITED USE
 
 Restrictions on usage:
-: none
+: CBOR diagnostic notation represents CBOR data items, which are the
+  format intended for actual interchange.
+  The media type application/cbor-diagnostic is intended to be used
+  within documents about CBOR data items, in diagnostics for human
+  consumption, and in other representations of CBOR data items that
+  are necessarily text-based such as in configuration files or other
+  data edited by humans, often under source-code control.
 
 Author/Change controller:
 : IETF
