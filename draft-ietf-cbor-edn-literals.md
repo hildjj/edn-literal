@@ -36,7 +36,6 @@ venue:
 normative:
   STD94: cbor
   RFC8610: cddl
-  I-D.ietf-cbor-update-8610-grammar: cddlupd
   RFC8742: seq
   STD90: json
   STD68: abnf
@@ -50,6 +49,7 @@ normative:
 informative:
   RFC4648: base
   RFC9165: controls
+  I-D.ietf-cbor-update-8610-grammar: cddlupd
   IANA.core-parameters:
 
 --- abstract
