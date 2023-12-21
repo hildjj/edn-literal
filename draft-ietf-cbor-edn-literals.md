@@ -37,7 +37,6 @@ normative:
   STD94: cbor
   RFC8610: cddl
   RFC8742: seq
-  STD90: json
   STD68: abnf
   RFC7405: abnfcs
   RFC3339: datetime
@@ -48,6 +47,7 @@ normative:
   STD80: ascii
 informative:
   RFC4648: base
+  STD90: json
   RFC9165: controls
   I-D.ietf-cbor-update-8610-grammar: cddlupd
   IANA.core-parameters:
@@ -207,7 +207,8 @@ This syntax can be thought to establish a name space, with the names
 The present specification defines additional names for this namespace,
 which we call *application-extension identifiers*.
 For the quoted string, the same rules apply as for byte strings.
-In particular, the escaping rules of JSON strings are applied
+In particular, the escaping rules that were adapted from JSON strings
+are applied
 equivalently for application-oriented extensions, e.g., within the
 quoted string `\\` stands
 for a single backslash and `\'` stands for a single quote.
