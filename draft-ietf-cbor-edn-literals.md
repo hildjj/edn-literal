@@ -817,7 +817,7 @@ Each of these may make use of rules defined in {{abnf-grammar}}.
 
 
 The syntax of the content of byte strings represented in hex,
-such as `h''`, `h'0815`, or `h'/head/ 63 /contents/ 66 6f 6f'`
+such as `h''`, `h'0815'`, or `h'/head/ 63 /contents/ 66 6f 6f'`
 (another representation of `<< "foo" >>`), is described by the ABNF in {{abnf-grammar-h}}.
 This syntax accommodates both lower case and upper case hex digits, as
 well as blank space (including comments) around each hex digit.
