@@ -43,13 +43,13 @@ normative:
   RFC7405: abnfcs
   RFC3339: datetime
   RFC3986: uri
-  RFC9165: controls
   RFC9164: iptag
   IANA.cbor-tags: tags
   BCP26: ianacons
   STD80: ascii
 informative:
   RFC4648: base
+  RFC9165: controls
   IANA.core-parameters:
 
 --- abstract
@@ -128,7 +128,7 @@ In a similar vein, the term "ABNF" in this document refers to the
 language defined in {{-abnf}} as extended in {{-abnfcs}}, where the
 "characters" of {{Section 2.3 of RFC5234@-abnf}} are Unicode scalar values.
 The term "CDDL" refers to the data definition language defined in
-{{-cddl}} and its registered extensions (such as those in {{RFC9165}}), as
+{{-cddl}} and its registered extensions (such as those in {{-controls}}), as
 well as {{-cddlupd}}.
 
 {::boilerplate bcp14-tagged}
