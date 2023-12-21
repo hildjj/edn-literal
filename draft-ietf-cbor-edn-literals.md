@@ -386,11 +386,23 @@ For example, `dt'1969-07-21T02:56:16Z'` can be provisionally represented as
 Handling information deliberately elided from an EDN document {#elision}
 -------------------------------------------------------------
 
-EDN supports the use of an _ellipsis_ (notated as three or more dots
+When using EDN for exposition in a document or on a whiteboard, it is
+often useful to be able to leave out parts of an EDN document that are
+not of interest at that point of the exposition.
+
+To facilitate this, this specification
+supports the use of an _ellipsis_ (notated as three or more dots
 in a row, as in `...`) to indicate parts of an EDN document that have
 been elided (and therefore cannot be reconstructed).
 
-This specification defines a CBOR Tag for this purpose:
+Upon ingesting EDN as a representation of a CBOR data item for further
+processing, the occurrence of an ellipsis usually is an error and
+processing has to stop.
+
+However, it is useful to be able to process EDN documents with
+ellipses in the automation scripts for the documents using them.
+This specification defines a CBOR Tag that can be used in the ingestion
+for this purpose:
 The Diagnostic Notation Ellipsis Tag, tag number CPA888 ({{iana-standin}}).
 The content of this tag either is
 
