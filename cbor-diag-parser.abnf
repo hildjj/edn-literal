@@ -1,4 +1,5 @@
 seq             = S [item S *("," S item S) OC] S
+one-item        = S item S
 item            = map / array / tagged
                 / number / simple
                 / string / streamstring
