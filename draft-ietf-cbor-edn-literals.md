@@ -294,12 +294,12 @@ tagged with tag number 54, if an IPv6address is used, or tag number
 52, if an IPv4address is used.
 
 As an additional case, the upper-case app-string `IP''` can be used
-with a prefix such as `192.0.2.0/24`, with the equivalent tag as its value.
+with a prefix such as `2001:db8::/56` or `192.0.2.0/24`, with the equivalent tag as its value.
 (Note that {{-iptag}} representations of address prefixes need to
 implement the truncation of the address byte string as described in
 {{Section 4.2 of -iptag}}; see example below.)
-For completeness, the lower-case variant `ip'192.0.2.0/24'` stands for
-an unwrapped `[24,h'c00002']`; however, in this case the information
+For completeness, the lower-case variant `ip'2001:db8::/56'` or  `ip'192.0.2.0/24'` stands for
+an unwrapped `[56,h'20010db8']` or `[24,h'c00002']`; however, in this case the information
 on whether an address is IPv4 or IPv6 often needs to come from the context.
 
 Note that there is no direct representation of an address combined
