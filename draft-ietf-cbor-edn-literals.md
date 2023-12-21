@@ -43,6 +43,8 @@ normative:
   RFC3986: uri
   RFC9164: iptag
   IANA.cbor-tags: tags
+  IANA.media-types:
+  IANA.core-parameters:
   BCP26: ianacons
   STD80: ascii
 informative:
@@ -50,7 +52,6 @@ informative:
   STD90: json
   RFC9165: controls
   I-D.ietf-cbor-update-8610-grammar: cddlupd
-  IANA.core-parameters:
 
 --- abstract
 
@@ -603,7 +604,7 @@ initial entries have the Change Controller "IETF".
 ## Media Type
 
 IANA is requested to add the following Media-Type to the "Media Types"
-registry {{!IANA.media-types}}.
+registry {{IANA.media-types}}.
 
 | Name            | Template                    | Reference              |
 | cbor-diagnostic | application/cbor-diagnostic | RFC-XXXX, {{media-type}} |
