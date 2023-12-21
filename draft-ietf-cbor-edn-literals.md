@@ -7,7 +7,7 @@ title: >
 abbrev: >
   CBOR EDN: Literals and ABNF
 docname: draft-ietf-cbor-edn-literals-latest
-date: 2023-11-20
+date: 2023-12-14
 
 keyword: Internet-Draft
 cat: info
@@ -34,33 +34,24 @@ venue:
   latest: "https://cbor-wg.github.io/edn-literal/"
 
 normative:
-  STD94:
-    -: cbor
-    =: RFC8949
+  STD94: cbor
   RFC8610: cddl
-  I-D.ietf-cbor-update-8610-grammar: cddlupd
   RFC8742: seq
-  STD90:
-    -: json
-    =: RFC8259
-  STD68:
-   -: abnf
-   =: RFC5234
+  STD68: abnf
   RFC7405: abnfcs
   RFC3339: datetime
   RFC3986: uri
-  RFC9165: controls
   RFC9164: iptag
   IANA.cbor-tags: tags
-  BCP26:
-    -: ianacons
-    =: RFC8126
-  STD80:
-    -: ascii
-    =: RFC20
+  IANA.media-types:
+  IANA.core-parameters:
+  BCP26: ianacons
+  STD80: ascii
 informative:
   RFC4648: base
-  IANA.core-parameters:
+  STD90: json
+  RFC9165: controls
+  I-D.ietf-cbor-update-8610-grammar: cddlupd
 
 --- abstract
 
@@ -77,7 +68,8 @@ The Concise Binary Object Representation, CBOR (STD 94, RFC 8949), [^abs1-]
 
 ​[^abs3-] (RFC 9164).
 
-[^abs4-]: To facilitate tool interoperation, this document also
+[^abs4-]: A few further additions close some gaps in usability.
+     To facilitate tool interoperation, this document
      specifies a formal ABNF definition for extended diagnostic notation (EDN)
      that accommodates application-oriented literals.
 
@@ -90,7 +82,7 @@ Introduction        {#intro}
 ============
 
 For the Concise Binary Object Representation, CBOR,
-{{Section 8 of -cbor}} in conjunction with {{Appendix G of -cddl}}
+{{Section 8 of RFC8949@-cbor}} in conjunction with {{Appendix G of -cddl}}
 [^abs1-]
 Diagnostic notation syntax is based on JSON, with extensions
 for representing CBOR constructs such as binary data and tags.
@@ -106,9 +98,14 @@ for representing CBOR constructs such as binary data and tags.
 ABNF definitions in {{app-grammars}} for grammars for both the
 byte string presentations predefined in {{-cbor}} and the application-extensions).
 
+In addition, this document finally registers a media type identifier
+and a content-format for CBOR diagnostic notation.  This does not
+elevate its status as an interchange format, but recognizes that
+interaction between tools is often smoother if media types can be used.
+
 ## Terminology
 
-{{Section 8 of -cbor}} defines the original CBOR diagnostic notation,
+{{Section 8 of RFC8949@-cbor}} defines the original CBOR diagnostic notation,
 and {{Appendix G of -cddl}} supplies a number of extensions to the
 diagnostic notation that result in the Extended Diagnostic Notation
 (EDN).
@@ -121,7 +118,7 @@ situations where backward compatibility would pose a significant
 obstacle, there is little point in not using these extensions.
 
 Therefore, when we refer to "_diagnostic notation_", we mean to
-include the original notation from {{Section 8 of -cbor}} as well as the
+include the original notation from {{Section 8 of RFC8949@-cbor}} as well as the
 extensions from {{Appendix G of -cddl}}, {{Section 4.2 of -seq}}, and the
 present document.
 However, we stick to the abbreviation "_EDN_" as it has become quite
@@ -130,16 +127,16 @@ popular and is more sharply distinguishable from other meanings than
 
 In a similar vein, the term "ABNF" in this document refers to the
 language defined in {{-abnf}} as extended in {{-abnfcs}}, where the
-"characters" of {{Section 2.3 of -abnf}} are Unicode scalar values.
+"characters" of {{Section 2.3 of RFC5234@-abnf}} are Unicode scalar values.
 The term "CDDL" refers to the data definition language defined in
-{{-cddl}} and its registered extensions (such as those in {{RFC9165}}), as
+{{-cddl}} and its registered extensions (such as those in {{-controls}}), as
 well as {{-cddlupd}}.
 
 {::boilerplate bcp14-tagged}
 
 ## (Non-)Objectives of this Document
 
-{{Section 8 of -cbor}} states the objective of defining a
+{{Section 8 of RFC8949@-cbor}} states the objective of defining a
 human-readable diagnostic notation with CBOR.
 In particular, it states:
 
@@ -158,7 +155,7 @@ For comparison with test data, it is often useful if different
 implementations generate the same (or similar) output for the same
 CBOR data items.
 This is comparable to the objectives of deterministic serialization
-for CBOR data items themselves ({{Section 4.2 of -cbor}}).
+for CBOR data items themselves ({{Section 4.2 of RFC8949@-cbor}}).
 However, there are even more representation variants in EDN than in
 binary CBOR, and there is little point in specifically endorsing a
 single variant as "deterministic" when other variants may be more
@@ -168,10 +165,11 @@ that control what presentation variant is most desirable for the
 application that it is being used for.
 
 Because of this, a deterministic representation is not defined for
-EDN, and there is little expectation of "roundtripping": the ability
+EDN, and there is no expectation for "roundtripping" from EDN to
+CBOR and back, i.e., for an ability
 to convert EDN to binary CBOR and back to EDN while achieving exactly
-the same result as the original input EDN, which possibly was created
-by humans or by a different EDN generator.
+the same result as the original input EDN — the original EDN possibly
+was created by humans or by a different EDN generator.
 
 However, there is a certain expectation that EDN generators can be
 configured to some basic output format, which:
@@ -186,7 +184,7 @@ configured to some basic output format, which:
   and `:`.
 
 Additional features such as ensuring deterministic map ordering
-({{Section 4.2 of -cbor}}) on output, or even deviating from the basic
+({{Section 4.2 of RFC8949@-cbor}}) on output, or even deviating from the basic
 configuration in some systematic way, can further assist in comparing
 test data.
 Information obtained from a CDDL model can help in choosing
@@ -199,7 +197,7 @@ Application-Oriented Extension Literals
 This document extends the syntax used in diagnostic notation for byte
 string literals to also be available for application-oriented extensions.
 
-As per {{Section 8 of -cbor}}, the diagnostic notation can notate byte
+As per {{Section 8 of RFC8949@-cbor}}, the diagnostic notation can notate byte
 strings in a number of {{-base}} base encodings, where the encoded text
 is enclosed in single quotes, prefixed by an identifier (»h« for
 base16, »b32« for base32, »h32« for base32hex, »b64« for base64 or
@@ -210,7 +208,8 @@ This syntax can be thought to establish a name space, with the names
 The present specification defines additional names for this namespace,
 which we call *application-extension identifiers*.
 For the quoted string, the same rules apply as for byte strings.
-In particular, the escaping rules of JSON strings are applied
+In particular, the escaping rules that were adapted from JSON strings
+are applied
 equivalently for application-oriented extensions, e.g., within the
 quoted string `\\` stands
 for a single backslash and `\'` stands for a single quote.
@@ -241,21 +240,16 @@ extension (such as tag number 1 for `DT`).
 Examples for application-oriented extensions to CBOR diagnostic
 notation can be found in the following sections.
 
-In addition, this document finally registers a media type identifier
-and a content-format for CBOR diagnostic notation.  This does not
-elevate its status as an interchange format, but recognizes that
-interaction between tools is often smoother if media types can be used.
-
 
 The "dt" Extension {#dt}
 ------------------
 
 The application-extension identifier "dt" is used to notate a
 date/time literal that can be used as an Epoch-Based Date/Time as per
-{{Section 3.4.2 of -cbor}}.
+{{Section 3.4.2 of RFC8949@-cbor}}.
 
 The text of the literal is a Standard Date/Time String as per
-{{Section 3.4.1 of -cbor}}.
+{{Section 3.4.1 of RFC8949@-cbor}}.
 
 The value of the literal is a number representing the result of a
 conversion of the given Standard Date/Time String to an Epoch-Based
@@ -302,12 +296,12 @@ tagged with tag number 54, if an IPv6address is used, or tag number
 52, if an IPv4address is used.
 
 As an additional case, the upper-case app-string `IP''` can be used
-with a prefix such as `192.0.2.0/24`, with the equivalent tag as its value.
+with a prefix such as `2001:db8::/56` or `192.0.2.0/24`, with the equivalent tag as its value.
 (Note that {{-iptag}} representations of address prefixes need to
 implement the truncation of the address byte string as described in
 {{Section 4.2 of -iptag}}; see example below.)
-For completeness, the lower-case variant `ip'192.0.2.0/24'` stands for
-an unwrapped `[24,h'c00002']`; however, in this case the information
+For completeness, the lower-case variant `ip'2001:db8::/56'` or  `ip'192.0.2.0/24'` stands for
+an unwrapped `[56,h'20010db8']` or `[24,h'c00002']`; however, in this case the information
 on whether an address is IPv4 or IPv6 often needs to come from the context.
 
 Note that there is no direct representation of an address combined
@@ -394,11 +388,23 @@ For example, `dt'1969-07-21T02:56:16Z'` can be provisionally represented as
 Handling information deliberately elided from an EDN document {#elision}
 -------------------------------------------------------------
 
-EDN supports the use of an _ellipsis_ (notated as three or more dots
+When using EDN for exposition in a document or on a whiteboard, it is
+often useful to be able to leave out parts of an EDN document that are
+not of interest at that point of the exposition.
+
+To facilitate this, this specification
+supports the use of an _ellipsis_ (notated as three or more dots
 in a row, as in `...`) to indicate parts of an EDN document that have
 been elided (and therefore cannot be reconstructed).
 
-This specification defines a CBOR Tag for this purpose:
+Upon ingesting EDN as a representation of a CBOR data item for further
+processing, the occurrence of an ellipsis usually is an error and
+processing has to stop.
+
+However, it is useful to be able to process EDN documents with
+ellipses in the automation scripts for the documents using them.
+This specification defines a CBOR Tag that can be used in the ingestion
+for this purpose:
 The Diagnostic Notation Ellipsis Tag, tag number CPA888 ({{iana-standin}}).
 The content of this tag either is
 
@@ -494,14 +500,14 @@ IANA Considerations {#sec-iana}
 IANA is requested to create an "Application-Extension Identifiers"
 registry in a new "CBOR Diagnostic Notation" registry group
 \[IANA.cbor-diagnostic-notation], with the policy "expert review"
-({{Section 4.5 of -ianacons}}).
+({{Section 4.5 of RFC8126@-ianacons}}).
 
 The experts are instructed to be frugal in the allocation of
 application-extension identifiers that are suggestive of generally applicable semantics,
 keeping them in reserve for application-extensions that are likely to enjoy wide
 use and can make good use of their conciseness.
 The expert is also instructed to direct the registrant to provide a
-specification ({{Section 4.6 of -ianacons}}), but can make exceptions,
+specification ({{Section 4.6 of RFC8126@-ianacons}}), but can make exceptions,
 for instance when a specification is not available at the time of
 registration but is likely forthcoming.
 If the expert becomes aware of application-extension identifiers that are deployed and
@@ -521,7 +527,7 @@ Description:
 : a brief description
 
 Change Controller:
-: (see {{Section 2.3 of -ianacons}})
+: (see {{Section 2.3 of RFC8126@-ianacons}})
 
 Reference:
 : a reference document that provides a description of the
@@ -548,7 +554,7 @@ Identifier Registry"}
 IANA is requested to create an "Encoding Indicators"
 registry in the newly created "CBOR Diagnostic Notation" registry group
 \[IANA.cbor-diagnostic-notation], with the policy "specification required"
-({{Section 4.6 of -ianacons}}).
+({{Section 4.6 of RFC8126@-ianacons}}).
 
 The experts are instructed to be frugal in the allocation of
 encoding indicators that are suggestive of generally applicable semantics,
@@ -572,7 +578,7 @@ Description:
 : a brief description
 
 Change Controller:
-: (see {{Section 2.3 of -ianacons}})
+: (see {{Section 2.3 of RFC8126@-ianacons}})
 
 Reference:
 : a reference document that provides a description of the
@@ -598,7 +604,7 @@ initial entries have the Change Controller "IETF".
 ## Media Type
 
 IANA is requested to add the following Media-Type to the "Media Types"
-registry {{!IANA.media-types}}.
+registry {{IANA.media-types}}.
 
 | Name            | Template                    | Reference              |
 | cbor-diagnostic | application/cbor-diagnostic | RFC-XXXX, {{media-type}} |
@@ -657,10 +663,16 @@ Person & email address to contact for further information:
   or IETF Applications and Real-Time Area (art@ietf.org)
 
 Intended usage:
-: COMMON
+: LIMITED USE
 
 Restrictions on usage:
-: none
+: CBOR diagnostic notation represents CBOR data items, which are the
+  format intended for actual interchange.
+  The media type application/cbor-diagnostic is intended to be used
+  within documents about CBOR data items, in diagnostics for human
+  consumption, and in other representations of CBOR data items that
+  are necessarily text-based such as in configuration files or other
+  data edited by humans, often under source-code control.
 
 Author/Change controller:
 : IETF
@@ -706,6 +718,14 @@ The security considerations of {{-cbor}} and {{-cddl}} apply.
 ABNF Definitions {#grammars}
 ================
 
+This appendix collects grammars in ABNF form ({{-abnf}} as extended in
+{{-abnfcs}}) that serve to define the syntax of EDN and some
+application-oriented literals.
+
+Implementation note: The ABNF definitions in this appendix are
+intended to be useful in a PEG parser interpretation (see {{Appendix A
+of -cddl}} for an introduction into PEG).
+
 Overall ABNF Definition for Extended Diagnostic Notation {#grammar}
 --------------------------------------------------------
 
@@ -746,7 +766,7 @@ The following additional items should help in the interpretation:
   for a floating point number in the usual hexadecimal notation (which
   uses a mantissa in hexadecimal and an exponent in decimal notation).
 * `spec` stands for an encoding indicator.
-  As per {{Section 8.1 of -cbor}}:
+  As per {{Section 8.1 of RFC8949@-cbor}}:
 
   * an underscore `_` on its own stands
     for indefinite length encoding (`ai=31`, only available behind the
@@ -755,9 +775,9 @@ The following additional items should help in the interpretation:
     special cases ''_ and ""_), and
   * `_0` to `_3` stand for `ai=24` to `ai=27`, respectively.
 
-  Surprisingly, {{Section 8.1 of -cbor}} does not address `ai=0` to
+  Surprisingly, {{Section 8.1 of RFC8949@-cbor}} does not address `ai=0` to
   `ai=23` — the assumption seems to be that preferred serialization
-  (Section 4.1 of {{-cbor}}) will be used when converting CBOR
+  ({{Section 4.1 of RFC8949@-cbor}}) will be used when converting CBOR
   diagnostic notation to an encoded CBOR data item, so leaving out the
   encoding indicator for a data item with a preferred serialization
   will implicitly use `ai=0` to `ai=23` if that is possible.
@@ -771,7 +791,7 @@ The following additional items should help in the interpretation:
 
 * `string` and the rules preceding it in the same block realize both
   the representation of strings that are split up into multiple chunks
-  ({{Section G.4 of -cbor}}) and the use of ellipses to represent elisions
+  ({{Section G.4 of RFC8949@-cbor}}) and the use of ellipses to represent elisions
   ({{elision}}).  The semantic processing of these rules is relatively
   complex:
   * A single `...` is a general ellipsis, which can stand for any data
@@ -782,7 +802,7 @@ The following additional items should help in the interpretation:
     represented by `888(null)`.
   * A simple sequence of string chunks is simply joined together.
     In both cases of joining strings, the rules of {{Section G.4 of
-    -cbor}} need to be followed; in particular, if a text string
+    RFC8949@-cbor}} need to be followed; in particular, if a text string
     results from the joining operation, that result needs to be valid
     UTF-8.
   * Some of the strings may be app-strings.
@@ -805,7 +825,7 @@ Each of these may make use of rules defined in {{abnf-grammar}}.
 
 
 The syntax of the content of byte strings represented in hex,
-such as `h''`, `h'0815`, or `h'/head/ 63 /contents/ 66 6f 6f'`
+such as `h''`, `h'0815'`, or `h'/head/ 63 /contents/ 66 6f 6f'`
 (another representation of `<< "foo" >>`), is described by the ABNF in {{abnf-grammar-h}}.
 This syntax accommodates both lower case and upper case hex digits, as
 well as blank space (including comments) around each hex digit.
@@ -990,11 +1010,13 @@ Important differences include:
   : `COSE_Sign_Tagged = #6.98(COSE_Sign)`
 
 * Separator character.  Like JSON, EDN requires commas as separators
-  between array elements and map members and doesn't allow a trailing
-  comma before the closing bracket/brace.
-  CDDL's comma separators in these contexts (CDDL groups) are optional
+  between array elements and map members (EDN also allows, but does
+  not require, a trailing comma before the closing bracket/brace,
+  enabling an easier to maintain "terminator" style of their use).
+  CDDL's comma separators in these contexts (CDDL groups) are entirely
+  optional
   (and actually are terminators, which together with their optionality
-  allows them to be used like separators as well or even not at all).
+  allows them to be used like separators as well, or even not at all).
 
 * Embedded CBOR.  EDN has a special syntax to describe the content of
   byte strings that are encoded CBOR data items.  CDDL can specify
