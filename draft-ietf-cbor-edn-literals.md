@@ -1010,11 +1010,13 @@ Important differences include:
   : `COSE_Sign_Tagged = #6.98(COSE_Sign)`
 
 * Separator character.  Like JSON, EDN requires commas as separators
-  between array elements and map members and doesn't allow a trailing
-  comma before the closing bracket/brace.
-  CDDL's comma separators in these contexts (CDDL groups) are optional
+  between array elements and map members (EDN also allows, but does
+  not require, a trailing comma before the closing bracket/brace,
+  enabling an easier to maintain "terminator" style of their use).
+  CDDL's comma separators in these contexts (CDDL groups) are entirely
+  optional
   (and actually are terminators, which together with their optionality
-  allows them to be used like separators as well or even not at all).
+  allows them to be used like separators as well, or even not at all).
 
 * Embedded CBOR.  EDN has a special syntax to describe the content of
   byte strings that are encoded CBOR data items.  CDDL can specify
