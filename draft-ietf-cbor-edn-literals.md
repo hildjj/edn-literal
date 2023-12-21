@@ -718,6 +718,14 @@ The security considerations of {{-cbor}} and {{-cddl}} apply.
 ABNF Definitions {#grammars}
 ================
 
+This appendix collects grammars in ABNF form ({{-abnf}} as extended in
+{{-abnfcs}}) that serve to define the syntax of EDN and some
+application-oriented literals.
+
+Implementation note: The ABNF definitions in this appendix are
+intended to be useful in a PEG parser interpretation (see {{Appendix A
+of -cddl}} for an introduction into PEG).
+
 Overall ABNF Definition for Extended Diagnostic Notation {#grammar}
 --------------------------------------------------------
 
