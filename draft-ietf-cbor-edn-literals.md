@@ -797,7 +797,7 @@ The following additional items should help in the interpretation:
   for a floating point number in the usual hexadecimal notation (which
   uses a mantissa in hexadecimal and an exponent in decimal notation,
   see Section 5.12.3 of {{IEEE754}}, Section 6.4.4.2 of {{C}}, or Section
-  5.3.14 of {{Cplusplus}}; floating-suffix/floating-point-suffix from
+  5.13.4 of {{Cplusplus}}; floating-suffix/floating-point-suffix from
   the latter two is not used here).
 * `spec` stands for an encoding indicator.
   As per {{Section 8.1 of RFC8949@-cbor}}:
