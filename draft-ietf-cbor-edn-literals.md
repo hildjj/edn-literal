@@ -47,6 +47,37 @@ normative:
   IANA.core-parameters:
   BCP26: ianacons
   STD80: ascii
+  IEEE754:
+    target: https://ieeexplore.ieee.org/document/8766229
+    title: IEEE Standard for Floating-Point Arithmetic
+    author:
+    - org: IEEE
+    date: false
+    seriesinfo:
+      IEEE Std: 754-2019
+      DOI: 10.1109/IEEESTD.2019.8766229
+  C:
+    target: https://www.iso.org/standard/74528.html
+    title: Information technology — Programming languages — C
+    author:
+    - org: International Organization for Standardization
+    date: 2018-06
+    seriesinfo:
+      ISO/IEC: 9899:2018
+    refcontent:
+    - Fourth Edition
+    annotation: The text of the standard is also available via https://www.open-std.org/jtc1/sc22/wg14/www/docs/n2310.pdf
+  Cplusplus:
+    target: https://www.iso.org/standard/79358.html
+    title: Programming languages — C++
+    author:
+    - org: International Organization for Standardization
+    date: 2020-12
+    seriesinfo:
+      ISO/IEC: 14882:2020
+    refcontent:
+    - Sixth Edition
+    annotation: The text of the standard is also available via https://isocpp.org/files/papers/N4860.pdf
 informative:
   RFC4648: base
   STD90: json
@@ -764,7 +795,10 @@ The following additional items should help in the interpretation:
   ("0x"), base 8/octal ("0o"), or base 2/binary ("0b") notation, unless the
   optional part containing a "p" is present, in which case it stands
   for a floating point number in the usual hexadecimal notation (which
-  uses a mantissa in hexadecimal and an exponent in decimal notation).
+  uses a mantissa in hexadecimal and an exponent in decimal notation,
+  see Section 5.12.3 of {{IEEE754}}, Section 6.4.4.2 of {{C}}, or Section
+  5.13.4 of {{Cplusplus}}; floating-suffix/floating-point-suffix from
+  the latter two is not used here).
 * `spec` stands for an encoding indicator.
   As per {{Section 8.1 of RFC8949@-cbor}}:
 
