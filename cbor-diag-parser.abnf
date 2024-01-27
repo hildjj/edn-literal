@@ -13,7 +13,7 @@ number          = (basenumber / decnumber / infin) spec
 sign            = "+" / "-"
 decnumber       = [sign] 1*DIGIT ["." 1*DIGIT] ["e" [sign] 1*DIGIT]
 basenumber      = [sign] "0" ("x" 1*HEXDIG
-                              [["." 1*HEXDIG] "p" [sign] *DIGIT]
+                              [["." 1*HEXDIG] "p" [sign] 1*DIGIT]
                             / "o" 1*ODIGIT
                             / "b" 1*BDIGIT)
 infin           = %s"Infinity"
