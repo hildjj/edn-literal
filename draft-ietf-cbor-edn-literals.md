@@ -790,7 +790,8 @@ The following additional items should help in the interpretation:
 * `decnumber` stands for an integer in the usual decimal notation, unless at
   least one of the optional parts starting with "." and "e" are
   present, in which case it stands for a floating point value in the
-  usual decimal notation.
+  usual decimal notation.  Note that the grammar now allows `3.` for
+  `3.0` and `.3` for `0.3` (also for hexadecimal floating point below).
 * `basenumber` stands for an integer in the usual base 16/hexadecimal
   ("0x"), base 8/octal ("0o"), or base 2/binary ("0b") notation, unless the
   optional part containing a "p" is present, in which case it stands
