@@ -7,7 +7,7 @@ title: >
 abbrev: >
   CBOR EDN: Literals and ABNF
 docname: draft-ietf-cbor-edn-literals-latest
-date: 2023-12-21
+date: 2024-02-01
 
 keyword: Internet-Draft
 cat: info
