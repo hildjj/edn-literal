@@ -138,7 +138,7 @@ interaction between tools is often smoother if media types can be used.
 {:aside}
 >
 > Examples in RFCs often do not use media type identifiers, but
-> special sourcecode type names that are allocated 
+> special sourcecode type names that are allocated
 > in <https://www.rfc-editor.org/materials/sourcecode-types.txt>.
 > At the time of writing, this resource lists four sourcecode type
 > names that can be used in RFCs for including CBOR data items and
