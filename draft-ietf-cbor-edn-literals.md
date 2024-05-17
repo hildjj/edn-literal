@@ -829,7 +829,7 @@ The following additional items should help in the interpretation:
 
 * `string` and the rules preceding it in the same block realize both
   the representation of strings that are split up into multiple chunks
-  ({{Section G.4 of RFC8949@-cbor}}) and the use of ellipses to represent elisions
+  ({{Section G.4 of -cddl}}) and the use of ellipses to represent elisions
   ({{elision}}).  The semantic processing of these rules is relatively
   complex:
   * A single `...` is a general ellipsis, which can stand for any data
@@ -840,7 +840,7 @@ The following additional items should help in the interpretation:
     represented by `888(null)`.
   * A simple sequence of string chunks is simply joined together.
     In both cases of joining strings, the rules of {{Section G.4 of
-    RFC8949@-cbor}} need to be followed; in particular, if a text string
+    -cddl}} need to be followed; in particular, if a text string
     results from the joining operation, that result needs to be valid
     UTF-8.
   * Some of the strings may be app-strings.
