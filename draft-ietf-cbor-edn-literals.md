@@ -606,7 +606,10 @@ Encoding Indicator:
   Encoding Indicator.
 
 Description:
-: a brief description
+: a brief description.
+  This description may employ an abbreviation of the form `ai=`nn,
+  where nn is the numeric value of the field _additional information_, the
+  low-order 5 bits of the initial byte (see {{Section 3 of RFC8949@-cbor}}).
 
 Change Controller:
 : (see {{Section 2.3 of RFC8126@-ianacons}})
@@ -804,6 +807,11 @@ The following additional items should help in the interpretation:
   5.13.4 of {{Cplusplus}}; floating-suffix/floating-point-suffix from
   the latter two is not used here).
 * `spec` stands for an encoding indicator.
+
+  (In the following, an abbreviation of the form `ai=`nn gives nn as
+  the numeric value of the field _additional information_, the low-order 5
+  bits of the initial byte: see {{Section 3 of RFC8949@-cbor}}.)
+
   As per {{Section 8.1 of RFC8949@-cbor}}:
 
   * an underscore `_` on its own stands
