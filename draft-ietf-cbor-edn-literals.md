@@ -1051,7 +1051,12 @@ Important differences include:
   pair of parentheses.
 
   EDN:
-  : `98(['', {}, /rest elided here: …/])`
+  : ~~~
+    98([h'', # empty encoded protected header
+        {},  # empty unprotected header
+        ...  # rest elided here
+       ])
+    ~~~
 
   CDDL:
   : `COSE_Sign_Tagged = #6.98(COSE_Sign)`
@@ -1070,7 +1075,11 @@ Important differences include:
   these with a control operator, which looks very different.
 
   EDN:
-  : `98([/h'a10126'/ << {/alg/ 1: -7 /ECDSA 256/ } >>, /…/])`
+  : ~~~
+    98([<< {/alg/ 1: -7 /ECDSA 256/} >>, # == h'a10126'
+        ...                              # rest elided here
+       ])
+    ~~~
 
   CDDL:
   : `serialized_map = bytes .cbor header_map`
