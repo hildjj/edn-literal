@@ -159,10 +159,13 @@ popular and is more sharply distinguishable from other meanings than
 In a similar vein, the term "ABNF" in this document refers to the
 language defined in {{-abnf}} as extended in {{-abnfcs}}, where the
 "characters" of {{Section 2.3 of RFC5234@-abnf}} are Unicode scalar values.
+
 The term "CDDL" (Concise Data Definition Language) refers to the data
 definition language defined in
 {{-cddl}} and its registered extensions (such as those in {{-controls}}), as
 well as {{-cddlupd}}.
+Additional information about the relationship between the two
+languages EDN and CDDL is captured in the informative {{edn-and-cddl}}.
 
 {::boilerplate bcp14-tagged}
 
@@ -995,6 +998,8 @@ title="ABNF Definition of Textual Representation of an IP Address"}
 
 EDN and CDDL
 ============
+
+This appendix is informative.
 
 EDN was designed as a language to provide a human-readable
 representation of an instance, i.e., a single CBOR data item or CBOR
