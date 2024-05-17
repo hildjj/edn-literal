@@ -80,6 +80,7 @@ normative:
     annotation: The text of the standard is also available via https://isocpp.org/files/papers/N4860.pdf
 informative:
   RFC4648: base
+  RFC9290:
   STD90: json
   RFC9165: controls
   I-D.ietf-cbor-update-8610-grammar: cddlupd
@@ -133,6 +134,26 @@ In addition, this document finally registers a media type identifier
 and a content-format for CBOR diagnostic notation.  This does not
 elevate its status as an interchange format, but recognizes that
 interaction between tools is often smoother if media types can be used.
+
+{:aside}
+>
+> Examples in RFCs often do not use media type identifiers, but
+> special sourcecode type names that are allocated 
+> in <https://www.rfc-editor.org/materials/sourcecode-types.txt>.
+> At the time of writing, this resource lists four sourcecode type
+> names that can be used in RFCs for including CBOR data items and
+> CBOR-related languages:
+>
+> * `cbor` (which is actually not useful, as CBOR is a binary format
+>   and cannot be used in textual examples in an RFC),
+> * `cbor-diag` (which is another name for EDN, as defined in the
+>   present document),
+> * `cbor-pretty` (which is a possibly annotated and pretty-printed
+>   hexdump of an encoded CBOR data item, along the lines of the
+>   grammar of {{h-grammar}}, as used for instance for some the examples
+>   in {{Section A.3 of RFC9290}}), and
+> * `cddl` (which is used for the Concise Data Definition Language,
+>   CDDL, see {{terminology}} below).
 
 ## Terminology
 
