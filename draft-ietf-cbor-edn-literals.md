@@ -779,7 +779,9 @@ The security considerations of {{-cbor}} and {{-cddl}} apply.
 ABNF Definitions {#grammars}
 ================
 
-This appendix collects grammars in ABNF form ({{-abnf}} as extended in
+This appendix is normative.
+
+It collects grammars in ABNF form ({{-abnf}} as extended in
 {{-abnfcs}}) that serve to define the syntax of EDN and some
 application-oriented literals.
 
