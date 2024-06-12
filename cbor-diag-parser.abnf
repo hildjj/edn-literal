@@ -1,4 +1,4 @@
-seq             = S [item S *("," S item S) OC] S
+seq             = S [item S *("," S item S) OC]
 one-item        = S item S
 item            = map / array / tagged
                 / number / simple
