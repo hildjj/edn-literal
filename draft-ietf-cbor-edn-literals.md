@@ -658,6 +658,11 @@ initial entries have the Change Controller "IETF".
 {: #tab-iana-ei title="Initial Content of Encoding Indicator Registry"}
 
 
+{:aside}
+>
+As the "Reference" column reflects, all the encoding indicators
+initially registered are already defined in {{Section 8.1 of RFC8949@-cbor}},
+with the exception of `_i`, which is defined in {{grammar}}.
 
 
 ## Media Type
