@@ -836,6 +836,32 @@ The following additional items should help in the interpretation:
   see Section 5.12.3 of {{IEEE754}}, Section 6.4.4.2 of {{C}}, or Section
   5.13.4 of {{Cplusplus}}; floating-suffix/floating-point-suffix from
   the latter two is not used here).
+* When `decnumber` or `basenumber` stands for an integer, the
+  corresponding CBOR data item is represented using major type 0 or 1
+  if possible, or using tag 2 or 3 if not.
+  In the latter case, this specification does not define any encoding
+  indicators that apply.
+  If fine control over encoding is desired, this can be expressed by
+  being explicit about the representation as a tag:
+  E.g., `987654321098765432310`, which is equivalent to `2(h'35 8a 75
+  04 38 f3 80 f5 f6')` in its preferred serialization, might be
+  written as `2_3(h'00 00 00 35 8a 75 04 38 f3 80 f5 f6'_1)` if
+  leading zeros need to be added during serialization to obtain
+  specific sizes for tag head, byte string head, and the overall byte
+  string.
+
+  Otherwise, and for `infin`, a floating point data item with major
+  type 7 is used in preferred serialization (unless modified by an
+  encoding indicator, which then needs to be `_1`, `_2`, or `_3`).
+  For this, the number range needs to fit into a binary64 (or the size
+  corresponding to the encoding indicator), and the precision will be
+  adjusted to binary64 before further applying preferred serialization
+  (or to the size corresponding to the encoding indicator).
+  Tag 4/5 representations are not generated in these cases.
+  Future app-prefixes could be defined to allow more control for
+  obtaining a tag 4/5 representation directly from a hex or decimal
+  floating point literal.
+
 * `spec` stands for an encoding indicator.
 
   (In the following, an abbreviation of the form `ai=`nn gives nn as
