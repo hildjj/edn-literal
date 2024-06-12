@@ -7,7 +7,7 @@ title: >
 abbrev: >
   CBOR EDN: Literals and ABNF
 docname: draft-ietf-cbor-edn-literals-latest
-date: 2024-02-01
+# date: 2024-05-18
 
 keyword: Internet-Draft
 cat: info
@@ -1125,5 +1125,4 @@ The concept of application-oriented extensions to diagnostic notation,
 as well as the definition for the "dt" extension, were inspired by the
 CoRAL work by Klaus Hartke.
 
-<!--  LocalWords:  dedenting dedented
- -->
+(TBD)
