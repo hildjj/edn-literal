@@ -407,6 +407,15 @@ This document defines stand-in representation for two such cases:
   data item, destructively replacing complete subtrees or possibly
   just parts of a lengthy string by _elisions_ ({{elision}}).
 
+Implementation note:
+Typically, the ultimate applications will fail if they encounter tags
+unknown to them, which the ones defined in this section likely are.
+Where chains of tools are involved in processing EDN, it may be useful
+to fail earlier than at the ultimate receiver in the chain unless
+specific processing options (e.g., command line flags) are given that
+indicate which of these stand-ins are expected at this stage in the
+chain.
+
 Handling unknown application-extension identifiers {#unknown}
 --------------------------------------------------
 
