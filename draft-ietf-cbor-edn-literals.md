@@ -84,6 +84,8 @@ informative:
   STD90: json
   RFC9165: controls
   I-D.ietf-cbor-update-8610-grammar: cddlupd
+  I-D.bormann-cbor-e-ref: eref
+  I-D.bormann-t2trg-deref-id: deref
 
 --- abstract
 
@@ -773,6 +775,22 @@ Security considerations {#seccons}
 =======================
 
 The security considerations of {{-cbor}} and {{-cddl}} apply.
+
+The EDN specification provides two explicit extension points,
+application-extension identifiers ({{appext-iana}}) and encoding
+indicators ({{reg-ei}}).
+Extensions introduced this way can have their own security
+considerations (see, e.g., {{Section 5 of -eref}}).
+When implementing tools that support the use of EDN extensions, the
+implementer needs to be careful not to inadvertently introduce a
+vector for an attacker to invoke extensions not planned for by the
+tool operator, who might not have considered security considerations
+of specific extensions such as those posed by their use of
+dereferenceable identifiers ({{Section 6 of -deref}}).
+For instance, tools might require explicitly enabling the use of each
+extension that is not on a pre-approved list; this can possibly be
+made less onerous by combining this with a mechanism for supplying any
+parameters controlling such an extension.
 
 --- back
 
