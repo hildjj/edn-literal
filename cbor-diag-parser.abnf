@@ -48,7 +48,7 @@ b64             = %s"b64" SQUOTE inside-b64 SQUOTE
 inside-b64      = B *b64_4  [ b64_3 / b64_2 ]
 b64_4           = 4(b64dig B)
 b64_3           = 3(b64dig B) ["="] B
-b64_2           = 2(b64dig B) ["=="] B
+b64_2           = 2(b64dig B) ["=" B "="] B
 B               = *iblank *(hash-comment *iblank)
 iblank          = %x0A / %x20  ; Not HT or CR (gone)
 
