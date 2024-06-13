@@ -33,8 +33,72 @@ app-prefix      = lcalpha *lcalnum ; including h and b64
                 / ucalpha *ucalnum ; tagged variant, if defined
 app-string      = app-prefix sqstr
 sqstr           = "'" *single-quoted "'"
-bstr            = app-string / sqstr / embedded
-                  ; app-string could be any type
+bstr            = embedded / sqstr / known-app-str / ext-app-str
+ext-app-str     = app-prefix sqstr
+known-app-str   = h / b64 / ip / dt
+
+; app-string h
+h               = %s"h" SQUOTE inside-h SQUOTE
+inside-h        = S *(HEXDIG S HEXDIG S / "ellipsis" S) S
+ellipsis        = 3*"."
+S               = *blank *(comment *blank )
+
+; app-string b64
+b64             = %s"b64" SQUOTE inside-b64 SQUOTE
+inside-b64      = B *b64_4  [ b64_3 / b64_2 ]
+b64_4           = 4(b64dig B)
+b64_3           = 3(b64dig B) ["="] B
+b64_2           = 2(b64dig B) ["=="] B
+B               = *iblank *(hash-comment *iblank)
+iblank          = %x0A / %x20  ; Not HT or CR (gone)
+
+; app-string dt
+dt              = (%s"dt" / %s"DT") SQUOTE date-time SQUOTE
+full-date       = date-fullyear "-" date-month "-" date-mday
+full-time       = partial-time time-offset
+date-time       = full-date "T" full-time
+date-fullyear   = 4DIGIT
+date-month      = 2DIGIT  ; 01-12
+date-mday       = 2DIGIT  ; 01-28, 01-29, 01-30, 01-31 based on
+                          ; month/year
+time-hour       = 2DIGIT  ; 00-23
+time-minute     = 2DIGIT  ; 00-59
+time-second     = 2DIGIT  ; 00-58, 00-59, 00-60 based on leap sec
+                          ; rules
+time-secfrac    = "." 1*DIGIT
+time-numoffset  = ("+" / "-") time-hour ":" time-minute
+time-offset     = "Z" / time-numoffset
+
+partial-time    = time-hour ":" time-minute ":" time-second
+                  [time-secfrac]
+
+; app-string ip
+ip              = (%s"dt" / %s"DT") SQUOTE inside-ip SQUOTE
+inside-ip       = IPaddress ["/" uint]
+IPaddress       = IPv4address/ IPv6address
+
+; ABNF from RFC 3986, re-arranged for PEG compatibility:
+IPv6address     =                            6( h16 ":" ) ls32
+                /                       "::" 5( h16 ":" ) ls32
+                / [ h16               ] "::" 4( h16 ":" ) ls32
+                / [ h16 *1( ":" h16 ) ] "::" 3( h16 ":" ) ls32
+                / [ h16 *2( ":" h16 ) ] "::" 2( h16 ":" ) ls32
+                / [ h16 *3( ":" h16 ) ] "::"    h16 ":"   ls32
+                / [ h16 *4( ":" h16 ) ] "::"              ls32
+                / [ h16 *5( ":" h16 ) ] "::"              h16
+                / [ h16 *6( ":" h16 ) ] "::"
+
+h16             = 1*4HEXDIG
+ls32            = ( h16 ":" h16 ) / IPv4address
+IPv4address     = doctet "." doctet "." doctet "." doctet
+doctet          = "25" %x30-35         ; 250-255
+                / "2" %x30-34 DIGIT    ; 200-249
+                / "1" 2DIGIT           ; 100-199
+                / %x31-39 DIGIT        ; 10-99
+                / DIGIT                ; 0-9
+uint            = "0" / DIGIT1 *DIGIT
+
+
 tstr            = DQUOTE *double-quoted DQUOTE
 embedded        = "<<" seq ">>"
 
@@ -44,11 +108,20 @@ kp              = item S ":" S item
 
 ; We allow %x09 HT in prose, but not in strings
 blank           = %x09 / %x0A / %x0D / %x20
-non-slash       = blank / %x21-2e / %x30-D7FF / %xE000-10FFFF
-non-lf          = %x09 / %x0D / %x20-D7FF / %xE000-10FFFF
 S               = *blank *(comment *blank)
-comment         = "/" *non-slash "/"
-                / "#" *non-lf %x0A
+comment         = slash-comment / hash-comment
+slash-comment   = "/" *safe-non-slash "/"
+hash-comment    = "#" *safe-non-lf LF
+safe-non-slash  = safe-unescaped / LF / slash-escaped
+safe-non-lf     = safe-unescaped / "/" / hash-escaped
+safe-unescaped  =  %x0D ; carriage return
+                 / %x20-26   ; omit 0x27 '
+                 / %x28-2E   ; omit 0x2F /
+                 / %x30-5B   ; omit 0x5C \
+                 / %x5D-D7FF ; skip surrogate code points
+                 / %xE000-10FFFF
+slash-escaped   = "\" ( SQUOTE / "/" / escapable )
+hash-escaped    = "\" ( SQOUTE / "\" )
 
 ; optional trailing comma (ignored)
 OC              = ["," S]
@@ -73,7 +146,6 @@ escapable       = %s"b" ; BS backspace U+0008
                 / %s"n" ; LF line feed U+000A
                 / %s"r" ; CR carriage return U+000D
                 / %s"t" ; HT horizontal tab U+0009
-                / "/"   ; / slash (solidus) U+002F (JSON!)
                 / "\"   ; \ backslash (reverse solidus) U+005C
                 / (%s"u" hexchar) ;  uXXXX      U+XXXX
 
@@ -100,6 +172,9 @@ unescaped       = %x0A ; new line
                 / %xE000-10FFFF
 
 DQUOTE          = %x22    ; " double quote
+SQUOTE          = %x27    ; ' single quote
+LF              = %x0A    ; LF (Line Feed)
+
 DIGIT           = %x30-39 ; 0-9
 DIGIT1          = %x31-39 ; 1-9
 ODIGIT          = %x30-37 ; 0-7
