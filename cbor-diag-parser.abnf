@@ -73,7 +73,7 @@ partial-time    = time-hour ":" time-minute ":" time-second
                   [time-secfrac]
 
 ; app-string ip
-ip              = (%s"dt" / %s"DT") SQUOTE inside-ip SQUOTE
+ip              = (%s"ip" / %s"IP") SQUOTE inside-ip SQUOTE
 inside-ip       = IPaddress ["/" uint]
 IPaddress       = IPv4address/ IPv6address
 
