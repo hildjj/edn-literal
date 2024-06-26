@@ -788,7 +788,7 @@ tool operator, who might not have considered security considerations
 of specific extensions such as those posed by their use of
 dereferenceable identifiers ({{Section 6 of -deref}}).
 For instance, tools might require explicitly enabling the use of each
-extension that is not on a pre-approved list.
+extension that is not on an allowlist.
 This task can possibly be
 made less onerous by combining it with a mechanism for supplying any
 parameters controlling such an extension.
