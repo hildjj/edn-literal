@@ -861,7 +861,7 @@ implementation experience.
 ~~~ abnf
 {::include cbor-diag-parser.abnf}
 ~~~
-{: #abnf-grammar title="Overall ABNF Definition of CBOR EDN" 
+{: #abnf-grammar title="Overall ABNF Definition of CBOR EDN"
    sourcecode-name="cbor-edn.abnf"}
 
 While an ABNF grammar defines the set of character strings that are
