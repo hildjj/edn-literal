@@ -157,7 +157,7 @@ interaction between tools is often smoother if media types can be used.
 >   present document),
 > * `cbor-pretty` (which is a possibly annotated and pretty-printed
 >   hexdump of an encoded CBOR data item, along the lines of the
->   grammar of {{h-grammar}}, as used for instance for some the examples
+>   grammar of {{h-grammar}}, as used for instance for some of the examples
 >   in {{Section A.3 of RFC9290}}), and
 > * `cddl` (which is used for the Concise Data Definition Language,
 >   CDDL, see {{terminology}} below).
@@ -193,7 +193,7 @@ definition language defined in
 {{-cddl}} and its registered extensions (such as those in {{-controls}}), as
 well as {{-cddlupd}}.
 Additional information about the relationship between the two
-languages EDN and CDDL is captured in the informative {{edn-and-cddl}}.
+languages EDN and CDDL is captured in {{edn-and-cddl}}.
 
 {::boilerplate bcp14-tagged}
 
@@ -678,7 +678,8 @@ initial entries have the Change Controller "IETF".
 >
 As the "Reference" column reflects, all the encoding indicators
 initially registered are already defined in {{Section 8.1 of RFC8949@-cbor}},
-with the exception of `_i`, which is defined in {{grammar}}.
+with the exception of `_i`, which is defined in {{grammar}} of the
+present document.
 
 
 ## Media Type
@@ -817,9 +818,7 @@ parameters controlling such an extension.
 ABNF Definitions {#grammars}
 ================
 
-This appendix is normative.
-
-It collects grammars in ABNF form ({{-abnf}} as extended in
+This section collects grammars in ABNF form ({{-abnf}} as extended in
 {{-abnfcs}}) that serve to define the syntax of EDN and some
 application-oriented literals.
 
@@ -1094,7 +1093,7 @@ title="ABNF Definition of Textual Representation of an IP Address"}
 EDN and CDDL
 ============
 
-This appendix is informative.
+This appendix is for information.
 
 EDN was designed as a language to provide a human-readable
 representation of an instance, i.e., a single CBOR data item or CBOR
