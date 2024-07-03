@@ -162,6 +162,24 @@ interaction between tools is often smoother if media types can be used.
 > * `cddl` (which is used for the Concise Data Definition Language,
 >   CDDL, see {{terminology}} below).
 
+## Structure of This Document
+
+After introductory material, {{application-oriented-extension-literals}}
+introduces the concept of application-oriented extension literals and
+defines the "dt" and "ip" extensions.
+{{stand-in}} defines mechanisms
+for dealing with unknown application-oriented literals and
+deliberately elided information, followed by the conventional Sections
+for
+{{<<sec-iana}} ({{<sec-iana}}),
+{{<<seccons}} ({{<seccons}}),
+and References ({{<sec-normative-references}}, {{<sec-informative-references}}).
+The normative {{grammars}} gives the formal syntax of EDN in ABNF, with
+explanations for some features of and additions to this syntax, as an
+overall grammar ({{grammar}}) and specific grammars for the content of
+app-string and byte-string literals ({{app-grammars}}).
+An informative comparison of EDN with CDDL follows in {{edn-and-cddl}}.
+
 ## Terminology
 
 {{Section 8 of RFC8949@-cbor}} defines the original CBOR diagnostic notation,
@@ -489,7 +507,6 @@ Elisions can stand in for entire subtrees, e.g. in:
 
 ~~~ cbor-diag
 [1, 2, ..., 3]
-,
 { "a": 1,
   "b": ...,
   ...: ...
@@ -509,7 +526,6 @@ Subtree elisions can be represented in a CBOR data item by using
 
 ~~~ cbor-diag
 [1, 2, 888(null), 3]
-,
 { "a": 1,
   "b": 888(null),
   888(null): 888(null)
@@ -519,13 +535,14 @@ Subtree elisions can be represented in a CBOR data item by using
 Elisions also can be used as part of a (text or byte) string:
 
 ~~~ cbor-diag
-{ "contract": "Herewith I buy" ... "gned: Alice & Bob",
+{ "contract": "Herewith I buy" + ... + "gned: Alice & Bob",
   "signature": h'4711...0815',
 }
 ~~~
 
 The example "contract" uses string concatenation as per {{Section G.4
-of -cddl}}, extending that by allowing ellipses; while the example
+of -cddl}} as updated by {{grammar}}, extending that by allowing
+ellipses; while the example
 "signature" uses special syntax that allows the use of ellipses
 between the bytes notated _inside_ `h''` literals.
 
@@ -541,7 +558,7 @@ indicators:
 ~~~
 
 Note that the use of elisions is different from "commenting out" EDN
-text, e.g.
+text, e.g.:
 
 
 ~~~ cbor-diag
@@ -849,7 +866,8 @@ implementation experience.
 ~~~ abnf
 {::include cbor-diag-parser.abnf}
 ~~~
-{: #abnf-grammar "ABNF Definition of CBOR EDN" sourcecode-name="cbor-edn.abnf"}
+{: #abnf-grammar title="Overall ABNF Definition of CBOR EDN"
+   sourcecode-name="cbor-edn.abnf"}
 
 While an ABNF grammar defines the set of character strings that are
 considered to be valid EDN by this ABNF, the mapping of these
@@ -932,15 +950,40 @@ The following additional items should help in the interpretation:
 * `string` and the rules preceding it in the same block realize both
   the representation of strings that are split up into multiple chunks
   ({{Section G.4 of -cddl}}) and the use of ellipses to represent elisions
-  ({{elision}}).  The semantic processing of these rules is relatively
+  ({{elision}}).
+
+  Note that the syntax defined here for concatenation of components
+  uses an explicit `+` operator between the components to be
+  concatenated; {{Section G.4 of -cddl}} used simple juxtaposition,
+  which got in the way of making the use of commas optional in other
+  places (`OC`).
+  The example equivalent text strings from {{Section G.4 of -cddl}} now read:
+
+      "Hello world"
+      "Hello " + "world"
+      "Hello" + h'20' + "world"
+      "" + h'48656c6c6f20776f726c64' + ""
+
+  Similarly, the following byte string values are equivalent:
+
+      'Hello world'
+      'Hello ' + 'world'
+      'Hello ' + h'776f726c64'
+      'Hello' + h'20' + 'world'
+      '' + h'48656c6c6f20776f726c64' + '' + b64''
+      h'4 86 56c 6c6f' + h' 20776 f726c64'
+
+
+  The semantic processing of these rules is relatively
   complex:
+
   * A single `...` is a general ellipsis, which can stand for any data
     item.
-  * An ellipsis can be surrounded (on one or both sides) by string
-    chunks, the result is a CBOR tag number CPA888 that contains an
+  * An ellipsis can be concatenated (on one or both sides) with string
+    chunks (`string1`); the result is a CBOR tag number CPA888 that contains an
     array with joined together spans of such chunks plus the ellipses
     represented by `888(null)`.
-  * A simple sequence of string chunks is simply joined together.
+  * A concatenated sequence of string chunks is simply joined together.
     In both cases of joining strings, the rules of {{Section G.4 of
     -cddl}} need to be followed; in particular, if a text string
     results from the joining operation, that result needs to be valid
@@ -1156,14 +1199,23 @@ Important differences include:
   CDDL:
   : `COSE_Sign_Tagged = #6.98(COSE_Sign)`
 
-* Separator character.  Like JSON, EDN requires commas as separators
-  between array elements and map members (EDN also allows, but does
+* Previously, the use of comma as separator character. [^move]
+  JSON requires commas as separators between array elements and map
+  members; these commas also were required in the original diagnostic
+  notation defined in {{-cbor}} and the EDN defined in {{-cddl}}.
+  They are now optional in the places where EDN syntax allows commas.
+  (EDN also allows, but does
   not require, a trailing comma before the closing bracket/brace,
   enabling an easier to maintain "terminator" style of their use).
-  CDDL's comma separators in these contexts (CDDL groups) are entirely
-  optional
+  CDDL's comma separators in the equivalent contexts (CDDL groups) are
+  entirely optional
   (and actually are terminators, which together with their optionality
   allows them to be used like separators as well, or even not at all).
+  In summary, comma use is now aligned between EDN and CDDL, in a
+  fully backwards compatible way.
+
+[^move]: Move this after embedded CBOR as it actually no longer is a
+    difference.  But first check the diff...
 
 * Embedded CBOR.  EDN has a special syntax to describe the content of
   byte strings that are encoded CBOR data items.  CDDL can specify
