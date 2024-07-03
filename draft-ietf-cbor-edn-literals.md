@@ -169,16 +169,17 @@ introduces the concept of application-oriented extension literals and
 defines the "dt" and "ip" extensions.
 {{stand-in}} defines mechanisms
 for dealing with unknown application-oriented literals and
-deliberately elided information, followed by the conventional Sections
+deliberately elided information.
+{{grammars}} gives the formal syntax of EDN in ABNF, with
+explanations for some features of and additions to this syntax, as an
+overall grammar ({{grammar}}) and specific grammars for the content of
+app-string and byte-string literals ({{app-grammars}}).
+This is followed by the conventional sections
 for
 {{<<sec-iana}} ({{<sec-iana}}),
 {{<<seccons}} ({{<seccons}}),
 and References ({{<sec-normative-references}}, {{<sec-informative-references}}).
-The normative {{grammars}} gives the formal syntax of EDN in ABNF, with
-explanations for some features of and additions to this syntax, as an
-overall grammar ({{grammar}}) and specific grammars for the content of
-app-string and byte-string literals ({{app-grammars}}).
-An informative comparison of EDN with CDDL follows in {{edn-and-cddl}}.
+An informational comparison of EDN with CDDL follows in {{edn-and-cddl}}.
 
 ## Terminology
 
@@ -839,7 +840,7 @@ This section collects grammars in ABNF form ({{-abnf}} as extended in
 {{-abnfcs}}) that serve to define the syntax of EDN and some
 application-oriented literals.
 
-Implementation note: The ABNF definitions in this appendix are
+Implementation note: The ABNF definitions in this section are
 intended to be useful in a Parsing Expression Grammar (PEG) parser
 interpretation (see {{Appendix A
 of -cddl}} for an introduction into PEG).
@@ -847,7 +848,7 @@ of -cddl}} for an introduction into PEG).
 Overall ABNF Definition for Extended Diagnostic Notation {#grammar}
 --------------------------------------------------------
 
-This appendix provides an overall ABNF definition for the syntax of
+This subsection provides an overall ABNF definition for the syntax of
 CBOR extended diagnostic notation.
 
 To complete the parsing of an `app-string` with prefix, say, `p`, the
@@ -996,12 +997,12 @@ The following additional items should help in the interpretation:
 ABNF Definitions for app-string Content {#app-grammars}
 ---------------------------------------
 
-This appendix provides ABNF definitions for application-oriented extension
+This subsection provides ABNF definitions for application-oriented extension
 literals defined in {{-cbor}} and in this specification.
 These grammars describe the *decoded* content of the `sqstr` components that
 combine with the application-extension identifiers to form
 application-oriented extension literals.
-Each of these may make use of rules defined in {{abnf-grammar}}.
+Each of these may make use of ABNF rules defined in {{abnf-grammar}}.
 
 ### h: ABNF Definition of Hexadecimal representation of a byte string {#h-grammar}
 
