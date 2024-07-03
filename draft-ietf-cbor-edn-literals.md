@@ -2,10 +2,7 @@
 v: 3
 
 title: >
-  CBOR Extended Diagnostic Notation (EDN):
-  Application-Oriented Literals, ABNF, and Media Type
-abbrev: >
-  CBOR EDN: Literals and ABNF
+  CBOR Extended Diagnostic Notation (EDN)
 docname: draft-ietf-cbor-edn-literals-latest
 # date: 2024-05-18
 
@@ -90,12 +87,17 @@ informative:
 --- abstract
 
 The Concise Binary Object Representation, CBOR (STD 94, RFC 8949), [^abs1-]
+RFC 8610 extends this into what is known as Extended Diagnostic Notation (EDN).
 
 [^abs1-]: defines a "diagnostic notation" in order to
     be able to converse about CBOR data items without having to resort to
     binary data.
 
-[^abs3-]: This document specifies how to add application-oriented extensions to
+[^abs3-]: This document sets forth a further step of evolution of EDN,
+    and it is intended to serve as a single reference target in
+    specifications that use EDN.
+
+    It specifies how to add application-oriented extensions to
     the diagnostic notation.  It then defines two such extensions for
     text representations of epoch-based date/times and of IP addresses
     and prefixes
@@ -103,11 +105,12 @@ The Concise Binary Object Representation, CBOR (STD 94, RFC 8949), [^abs1-]
 ​[^abs3-] (RFC 9164).
 
 [^abs4-]: A few further additions close some gaps in usability.
+     It modifies one extension specified in Appendix G.4 of RFC 8610
+     to enable further increasing usability.
      To facilitate tool interoperation, this document
-     specifies a formal ABNF definition for extended diagnostic notation (EDN)
-     that accommodates application-oriented literals.
+     specifies a formal ABNF definition for EDN as defined
 
-[^abs4-]
+[^abs4-] today, and it adds media types.
 
 
 --- middle
@@ -115,7 +118,7 @@ The Concise Binary Object Representation, CBOR (STD 94, RFC 8949), [^abs1-]
 Introduction        {#intro}
 ============
 
-For the Concise Binary Object Representation, CBOR,
+For the Concise Binary Object Representation (CBOR)
 {{Section 8 of RFC8949@-cbor}} in conjunction with {{Appendix G of -cddl}}
 [^abs1-]
 Diagnostic notation syntax is based on JSON, with extensions
@@ -128,9 +131,11 @@ for representing CBOR constructs such as binary data and tags.
 
 [^abs3-] {{-iptag}}.
 
-[^abs4-] (See {{grammar}} for an overall ABNF grammar as well as the
-ABNF definitions in {{app-grammars}} for grammars for both the
-byte string presentations predefined in {{-cbor}} and the application-extensions).
+[^abs4-] today.
+    (See {{grammar}} for an overall ABNF grammar as well as the
+    ABNF definitions in {{app-grammars}} for grammars for both the
+    byte string presentations predefined in {{-cbor}} and the
+    application-extensions defined here.)
 
 In addition, this document finally registers a media type identifier
 and a content-format for CBOR diagnostic notation.  This does not
