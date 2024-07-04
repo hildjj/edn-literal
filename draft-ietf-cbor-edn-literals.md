@@ -465,6 +465,11 @@ of the single-quoted string.
 For example, `dt'1969-07-21T02:56:16Z'` can be provisionally represented as
 `/CPA/ 999(["dt", "1969-07-21T02:56:16Z"])`.
 
+If a stage of ingestion is not prepared to handle the Unresolved
+Application-Extension Tag, this is an error and processing has to
+stop, as if this stage had been ingesting an unknown or unimplemented
+application-extension literal itself.
+
 [^cpa]
 
 [^cpa]: RFC-Editor: This document uses the CPA (code point allocation)
