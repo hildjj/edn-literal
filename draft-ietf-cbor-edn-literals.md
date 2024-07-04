@@ -157,7 +157,7 @@ interaction between tools is often smoother if media types can be used.
 >   present document),
 > * `cbor-pretty` (which is a possibly annotated and pretty-printed
 >   hexdump of an encoded CBOR data item, along the lines of the
->   grammar of {{h-grammar}}, as used for instance for some the examples
+>   grammar of {{h-grammar}}, as used for instance for some of the examples
 >   in {{Section A.3 of RFC9290}}), and
 > * `cddl` (which is used for the Concise Data Definition Language,
 >   CDDL, see {{terminology}} below).
@@ -169,16 +169,17 @@ introduces the concept of application-oriented extension literals and
 defines the "dt" and "ip" extensions.
 {{stand-in}} defines mechanisms
 for dealing with unknown application-oriented literals and
-deliberately elided information, followed by the conventional Sections
+deliberately elided information.
+{{grammars}} gives the formal syntax of EDN in ABNF, with
+explanations for some features of and additions to this syntax, as an
+overall grammar ({{grammar}}) and specific grammars for the content of
+app-string and byte-string literals ({{app-grammars}}).
+This is followed by the conventional sections
 for
 {{<<sec-iana}} ({{<sec-iana}}),
 {{<<seccons}} ({{<seccons}}),
 and References ({{<sec-normative-references}}, {{<sec-informative-references}}).
-The normative {{grammars}} gives the formal syntax of EDN in ABNF, with
-explanations for some features of and additions to this syntax, as an
-overall grammar ({{grammar}}) and specific grammars for the content of
-app-string and byte-string literals ({{app-grammars}}).
-An informative comparison of EDN with CDDL follows in {{edn-and-cddl}}.
+An informational comparison of EDN with CDDL follows in {{edn-and-cddl}}.
 
 ## Terminology
 
@@ -211,7 +212,7 @@ definition language defined in
 {{-cddl}} and its registered extensions (such as those in {{-controls}}), as
 well as {{-cddlupd}}.
 Additional information about the relationship between the two
-languages EDN and CDDL is captured in the informative {{edn-and-cddl}}.
+languages EDN and CDDL is captured in {{edn-and-cddl}}.
 
 {::boilerplate bcp14-tagged}
 
@@ -579,273 +580,14 @@ validation steps may then simply fail instead of being informed about
 the elisions.
 
 
-IANA Considerations {#sec-iana}
-===================
-
-[^to-be-removed]
-
-[^to-be-removed]: RFC Editor: please replace RFC-XXXX with the RFC
-    number of this RFC, \[IANA.cbor-diagnostic-notation] with a
-    reference to the new registry group, and remove this note.
-
-
-## CBOR Diagnostic Notation Application-extension Identifiers Registry {#appext-iana}
-
-IANA is requested to create an "Application-Extension Identifiers"
-registry in a new "CBOR Diagnostic Notation" registry group
-\[IANA.cbor-diagnostic-notation], with the policy "expert review"
-({{Section 4.5 of RFC8126@-ianacons}}).
-
-The experts are instructed to be frugal in the allocation of
-application-extension identifiers that are suggestive of generally applicable semantics,
-keeping them in reserve for application-extensions that are likely to enjoy wide
-use and can make good use of their conciseness.
-The expert is also instructed to direct the registrant to provide a
-specification ({{Section 4.6 of RFC8126@-ianacons}}), but can make exceptions,
-for instance when a specification is not available at the time of
-registration but is likely forthcoming.
-If the expert becomes aware of application-extension identifiers that are deployed and
-in use, they may also initiate a registration on their own if
-they deem such a registration can avert potential future collisions.
-{: #de-instructions}
-
-Each entry in the registry must include:
-
-{:vspace}
-Application-Extension Identifier:
-: a lower case ASCII {{-ascii}} string that starts with a letter and can
-  contain letters and digits after that (`[a-z][a-z0-9]*`). No other
-  entry in the registry can have the same application-extension identifier.
-
-Description:
-: a brief description
-
-Change Controller:
-: (see {{Section 2.3 of RFC8126@-ianacons}})
-
-Reference:
-: a reference document that provides a description of the
-  application-extension identifier
-
-
-The initial content of the registry is shown in {{tab-iana}}; all
-initial entries have the Change Controller "IETF".
-
-| Application-extension Identifier | Description                     | Reference |
-|----------------------------------|---------------------------------|-----------|
-| h                                | Reserved                        | RFC8949   |
-| b32                              | Reserved                        | RFC8949   |
-| h32                              | Reserved                        | RFC8949   |
-| b64                              | Reserved                        | RFC8949   |
-| dt                               | Date/Time                       | RFC-XXXX   |
-| ip                               | IP Address/Prefix               | RFC-XXXX   |
-{: #tab-iana title="Initial Content of Application-extension
-Identifier Registry"}
-
-
-## Encoding Indicators {#reg-ei}
-
-IANA is requested to create an "Encoding Indicators"
-registry in the newly created "CBOR Diagnostic Notation" registry group
-\[IANA.cbor-diagnostic-notation], with the policy "specification required"
-({{Section 4.6 of RFC8126@-ianacons}}).
-
-The experts are instructed to be frugal in the allocation of
-encoding indicators that are suggestive of generally applicable semantics,
-keeping them in reserve for encoding indicator registrations that are likely to enjoy wide
-use and can make good use of their conciseness.
-If the expert becomes aware of encoding indicators that are deployed and
-in use, they may also solicit a specification and initiate a registration on their own if
-they deem such a registration can avert potential future collisions.
-{: #de-instructions-ei}
-
-Each entry in the registry must include:
-
-{:vspace}
-Encoding Indicator:
-: an ASCII {{-ascii}} string that starts with an underscore letter and
-  can contain zero or more underscores, letters and digits after that
-  (`_[_A-Za-z0-9]*`). No other entry in the registry can have the same
-  Encoding Indicator.
-
-Description:
-: a brief description.
-  This description may employ an abbreviation of the form `ai=`nn,
-  where nn is the numeric value of the field _additional information_, the
-  low-order 5 bits of the initial byte (see {{Section 3 of RFC8949@-cbor}}).
-
-Change Controller:
-: (see {{Section 2.3 of RFC8126@-ianacons}})
-
-Reference:
-: a reference document that provides a description of the
-  application-extension identifier
-
-
-The initial content of the registry is shown in {{tab-iana-ei}}; all
-initial entries have the Change Controller "IETF".
-
-| Encoding Indicator | Description                        | Reference        |
-|--------------------|------------------------------------|------------------|
-| _                  | Indefinite Length Encoding (ai=31) | RFC8949, RFC-XXXX |
-| _i                 | ai=0 to ai=23                      | RFC-XXXX          |
-| _0                 | ai=24                              | RFC8949, RFC-XXXX |
-| _1                 | ai=25                              | RFC8949, RFC-XXXX |
-| _2                 | ai=26                              | RFC8949, RFC-XXXX |
-| _3                 | ai=27                              | RFC8949, RFC-XXXX |
-{: #tab-iana-ei title="Initial Content of Encoding Indicator Registry"}
-
-
-{:aside}
->
-As the "Reference" column reflects, all the encoding indicators
-initially registered are already defined in {{Section 8.1 of RFC8949@-cbor}},
-with the exception of `_i`, which is defined in {{grammar}}.
-
-
-## Media Type
-
-IANA is requested to add the following Media-Type to the "Media Types"
-registry {{IANA.media-types}}.
-
-| Name            | Template                    | Reference              |
-| cbor-diagnostic | application/cbor-diagnostic | RFC-XXXX, {{media-type}} |
-{: #new-media-type align="left" title="New Media Type application/cbor-diagnostic"}
-
-{:compact}
-Type name:
-: application
-
-Subtype name:
-: cbor-diagnostic
-
-Required parameters:
-: N/A
-
-Optional parameters:
-: N/A
-
-Encoding considerations:
-: binary (UTF-8)
-
-Security considerations:
-: {{seccons}} of RFC XXXX
-
-Interoperability considerations:
-: none
-
-Published specification:
-: {{media-type}} of RFC XXXX
-
-Applications that use this media type:
-: Tools interchanging a human-readable form of CBOR
-
-Fragment identifier considerations:
-: The syntax and semantics of fragment identifiers is as specified for
-  "application/cbor".  (At publication of RFC XXXX, there is no
-  fragment identification syntax defined for "application/cbor".)
-
-Additional information:
-: \\
-
-  Deprecated alias names for this type:
-  : N/A
-
-  Magic number(s):
-  : N/A
-
-  File extension(s):
-  : .diag
-
-  Macintosh file type code(s):
-  : N/A
-
-Person & email address to contact for further information:
-: CBOR WG mailing list (cbor@ietf.org),
-  or IETF Applications and Real-Time Area (art@ietf.org)
-
-Intended usage:
-: LIMITED USE
-
-Restrictions on usage:
-: CBOR diagnostic notation represents CBOR data items, which are the
-  format intended for actual interchange.
-  The media type application/cbor-diagnostic is intended to be used
-  within documents about CBOR data items, in diagnostics for human
-  consumption, and in other representations of CBOR data items that
-  are necessarily text-based such as in configuration files or other
-  data edited by humans, often under source-code control.
-
-Author/Change controller:
-: IETF
-
-Provisional registration:
-: no
-
-## Content-Format
-
-IANA is requested to register a Content-Format number in the
-{{content-formats ("CoAP Content-Formats")<IANA.core-parameters}}
-sub-registry, within the "Constrained RESTful Environments (CoRE)
-Parameters" Registry {{IANA.core-parameters}}, as follows:
-
-| Content-Type                | Content Coding | ID   | Reference |
-| application/cbor-diagnostic | -              | TBD1 | RFC-XXXX  |
-{: align="left" title="New Content-Format"}
-
-TBD1 is to be assigned from the space 256..9999, according to the
-procedure "IETF Review or IESG Approval", preferably a number less
-than 1000.
-
-## Stand-in Tags {#iana-standin}
-
-[^cpa]
-
-In the "CBOR Tags" registry {{-tags}}, IANA is requested to assign the
-tags in {{tab-tag-values}} from the "specification required" space
-(suggested assignments: 888 and 999), with the present document as the
-specification reference.
-
-| Tag    | Data Item     | Semantics                                            | Reference |
-| CPA888 | null or array | Diagnostic Notation Ellipsis                         | RFC-XXXX  |
-| CPA999 | array         | Diagnostic Notation<br>Unresolved Application-Extension | RFC-XXXX  |
-{: #tab-tag-values cols='r l l' title="Values for Tags"}
-
-
-Security considerations {#seccons}
-=======================
-
-The security considerations of {{-cbor}} and {{-cddl}} apply.
-
-The EDN specification provides two explicit extension points,
-application-extension identifiers ({{appext-iana}}) and encoding
-indicators ({{reg-ei}}).
-Extensions introduced this way can have their own security
-considerations (see, e.g., {{Section 5 of -eref}}).
-When implementing tools that support the use of EDN extensions, the
-implementer needs to be careful not to inadvertently introduce a
-vector for an attacker to invoke extensions not planned for by the
-tool operator, who might not have considered security considerations
-of specific extensions such as those posed by their use of
-dereferenceable identifiers ({{Section 6 of -deref}}).
-For instance, tools might require explicitly enabling the use of each
-extension that is not on an allowlist.
-This task can possibly be
-made less onerous by combining it with a mechanism for supplying any
-parameters controlling such an extension.
-
---- back
-
 ABNF Definitions {#grammars}
 ================
 
-This appendix is normative.
-
-It collects grammars in ABNF form ({{-abnf}} as extended in
+This section collects grammars in ABNF form ({{-abnf}} as extended in
 {{-abnfcs}}) that serve to define the syntax of EDN and some
 application-oriented literals.
 
-Implementation note: The ABNF definitions in this appendix are
+Implementation note: The ABNF definitions in this section are
 intended to be useful in a Parsing Expression Grammar (PEG) parser
 interpretation (see {{Appendix A
 of -cddl}} for an introduction into PEG).
@@ -853,7 +595,7 @@ of -cddl}} for an introduction into PEG).
 Overall ABNF Definition for Extended Diagnostic Notation {#grammar}
 --------------------------------------------------------
 
-This appendix provides an overall ABNF definition for the syntax of
+This subsection provides an overall ABNF definition for the syntax of
 CBOR extended diagnostic notation.
 
 To complete the parsing of an `app-string` with prefix, say, `p`, the
@@ -1002,12 +744,12 @@ The following additional items should help in the interpretation:
 ABNF Definitions for app-string Content {#app-grammars}
 ---------------------------------------
 
-This appendix provides ABNF definitions for application-oriented extension
+This subsection provides ABNF definitions for application-oriented extension
 literals defined in {{-cbor}} and in this specification.
 These grammars describe the *decoded* content of the `sqstr` components that
 combine with the application-extension identifiers to form
 application-oriented extension literals.
-Each of these may make use of rules defined in {{abnf-grammar}}.
+Each of these may make use of ABNF rules defined in {{abnf-grammar}}.
 
 ### h: ABNF Definition of Hexadecimal representation of a byte string {#h-grammar}
 
@@ -1139,10 +881,268 @@ uint          = "0" / DIGIT1 *DIGIT
 title="ABNF Definition of Textual Representation of an IP Address"}
 
 
+IANA Considerations {#sec-iana}
+===================
+
+[^to-be-removed]
+
+[^to-be-removed]: RFC Editor: please replace RFC-XXXX with the RFC
+    number of this RFC, \[IANA.cbor-diagnostic-notation] with a
+    reference to the new registry group, and remove this note.
+
+
+## CBOR Diagnostic Notation Application-extension Identifiers Registry {#appext-iana}
+
+IANA is requested to create an "Application-Extension Identifiers"
+registry in a new "CBOR Diagnostic Notation" registry group
+\[IANA.cbor-diagnostic-notation], with the policy "expert review"
+({{Section 4.5 of RFC8126@-ianacons}}).
+
+The experts are instructed to be frugal in the allocation of
+application-extension identifiers that are suggestive of generally applicable semantics,
+keeping them in reserve for application-extensions that are likely to enjoy wide
+use and can make good use of their conciseness.
+The expert is also instructed to direct the registrant to provide a
+specification ({{Section 4.6 of RFC8126@-ianacons}}), but can make exceptions,
+for instance when a specification is not available at the time of
+registration but is likely forthcoming.
+If the expert becomes aware of application-extension identifiers that are deployed and
+in use, they may also initiate a registration on their own if
+they deem such a registration can avert potential future collisions.
+{: #de-instructions}
+
+Each entry in the registry must include:
+
+{:vspace}
+Application-Extension Identifier:
+: a lower case ASCII {{-ascii}} string that starts with a letter and can
+  contain letters and digits after that (`[a-z][a-z0-9]*`). No other
+  entry in the registry can have the same application-extension identifier.
+
+Description:
+: a brief description
+
+Change Controller:
+: (see {{Section 2.3 of RFC8126@-ianacons}})
+
+Reference:
+: a reference document that provides a description of the
+  application-extension identifier
+
+
+The initial content of the registry is shown in {{tab-iana}}; all
+initial entries have the Change Controller "IETF".
+
+| Application-extension Identifier | Description                     | Reference |
+|----------------------------------|---------------------------------|-----------|
+| h                                | Reserved                        | RFC8949   |
+| b32                              | Reserved                        | RFC8949   |
+| h32                              | Reserved                        | RFC8949   |
+| b64                              | Reserved                        | RFC8949   |
+| dt                               | Date/Time                       | RFC-XXXX   |
+| ip                               | IP Address/Prefix               | RFC-XXXX   |
+{: #tab-iana title="Initial Content of Application-extension
+Identifier Registry"}
+
+
+## Encoding Indicators {#reg-ei}
+
+IANA is requested to create an "Encoding Indicators"
+registry in the newly created "CBOR Diagnostic Notation" registry group
+\[IANA.cbor-diagnostic-notation], with the policy "specification required"
+({{Section 4.6 of RFC8126@-ianacons}}).
+
+The experts are instructed to be frugal in the allocation of
+encoding indicators that are suggestive of generally applicable semantics,
+keeping them in reserve for encoding indicator registrations that are likely to enjoy wide
+use and can make good use of their conciseness.
+If the expert becomes aware of encoding indicators that are deployed and
+in use, they may also solicit a specification and initiate a registration on their own if
+they deem such a registration can avert potential future collisions.
+{: #de-instructions-ei}
+
+Each entry in the registry must include:
+
+{:vspace}
+Encoding Indicator:
+: an ASCII {{-ascii}} string that starts with an underscore letter and
+  can contain zero or more underscores, letters and digits after that
+  (`_[_A-Za-z0-9]*`). No other entry in the registry can have the same
+  Encoding Indicator.
+
+Description:
+: a brief description.
+  This description may employ an abbreviation of the form `ai=`nn,
+  where nn is the numeric value of the field _additional information_, the
+  low-order 5 bits of the initial byte (see {{Section 3 of RFC8949@-cbor}}).
+
+Change Controller:
+: (see {{Section 2.3 of RFC8126@-ianacons}})
+
+Reference:
+: a reference document that provides a description of the
+  application-extension identifier
+
+
+The initial content of the registry is shown in {{tab-iana-ei}}; all
+initial entries have the Change Controller "IETF".
+
+| Encoding Indicator | Description                        | Reference        |
+|--------------------|------------------------------------|------------------|
+| _                  | Indefinite Length Encoding (ai=31) | RFC8949, RFC-XXXX |
+| _i                 | ai=0 to ai=23                      | RFC-XXXX          |
+| _0                 | ai=24                              | RFC8949, RFC-XXXX |
+| _1                 | ai=25                              | RFC8949, RFC-XXXX |
+| _2                 | ai=26                              | RFC8949, RFC-XXXX |
+| _3                 | ai=27                              | RFC8949, RFC-XXXX |
+{: #tab-iana-ei title="Initial Content of Encoding Indicator Registry"}
+
+
+{:aside}
+>
+As the "Reference" column reflects, all the encoding indicators
+initially registered are already defined in {{Section 8.1 of RFC8949@-cbor}},
+with the exception of `_i`, which is defined in {{grammar}} of the
+present document.
+
+
+## Media Type
+
+IANA is requested to add the following Media-Type to the "Media Types"
+registry {{IANA.media-types}}.
+
+| Name            | Template                    | Reference              |
+| cbor-diagnostic | application/cbor-diagnostic | RFC-XXXX, {{media-type}} |
+{: #new-media-type align="left" title="New Media Type application/cbor-diagnostic"}
+
+{:compact}
+Type name:
+: application
+
+Subtype name:
+: cbor-diagnostic
+
+Required parameters:
+: N/A
+
+Optional parameters:
+: N/A
+
+Encoding considerations:
+: binary (UTF-8)
+
+Security considerations:
+: {{seccons}} of RFC XXXX
+
+Interoperability considerations:
+: none
+
+Published specification:
+: {{media-type}} of RFC XXXX
+
+Applications that use this media type:
+: Tools interchanging a human-readable form of CBOR
+
+Fragment identifier considerations:
+: The syntax and semantics of fragment identifiers is as specified for
+  "application/cbor".  (At publication of RFC XXXX, there is no
+  fragment identification syntax defined for "application/cbor".)
+
+Additional information:
+: \\
+
+  Deprecated alias names for this type:
+  : N/A
+
+  Magic number(s):
+  : N/A
+
+  File extension(s):
+  : .diag
+
+  Macintosh file type code(s):
+  : N/A
+
+Person & email address to contact for further information:
+: CBOR WG mailing list (cbor@ietf.org),
+  or IETF Applications and Real-Time Area (art@ietf.org)
+
+Intended usage:
+: LIMITED USE
+
+Restrictions on usage:
+: CBOR diagnostic notation represents CBOR data items, which are the
+  format intended for actual interchange.
+  The media type application/cbor-diagnostic is intended to be used
+  within documents about CBOR data items, in diagnostics for human
+  consumption, and in other representations of CBOR data items that
+  are necessarily text-based such as in configuration files or other
+  data edited by humans, often under source-code control.
+
+Author/Change controller:
+: IETF
+
+Provisional registration:
+: no
+
+## Content-Format
+
+IANA is requested to register a Content-Format number in the
+{{content-formats ("CoAP Content-Formats")<IANA.core-parameters}}
+sub-registry, within the "Constrained RESTful Environments (CoRE)
+Parameters" Registry {{IANA.core-parameters}}, as follows:
+
+| Content-Type                | Content Coding | ID   | Reference |
+| application/cbor-diagnostic | -              | TBD1 | RFC-XXXX  |
+{: align="left" title="New Content-Format"}
+
+TBD1 is to be assigned from the space 256..9999, according to the
+procedure "IETF Review or IESG Approval", preferably a number less
+than 1000.
+
+## Stand-in Tags {#iana-standin}
+
+[^cpa]
+
+In the "CBOR Tags" registry {{-tags}}, IANA is requested to assign the
+tags in {{tab-tag-values}} from the "specification required" space
+(suggested assignments: 888 and 999), with the present document as the
+specification reference.
+
+| Tag    | Data Item     | Semantics                                            | Reference |
+| CPA888 | null or array | Diagnostic Notation Ellipsis                         | RFC-XXXX  |
+| CPA999 | array         | Diagnostic Notation<br>Unresolved Application-Extension | RFC-XXXX  |
+{: #tab-tag-values cols='r l l' title="Values for Tags"}
+
+
+Security considerations {#seccons}
+=======================
+
+The security considerations of {{-cbor}} and {{-cddl}} apply.
+
+The EDN specification provides two explicit extension points,
+application-extension identifiers ({{appext-iana}}) and encoding
+indicators ({{reg-ei}}).
+Extensions introduced this way can have their own security
+considerations (see, e.g., {{Section 5 of -eref}}).
+When implementing tools that support the use of EDN extensions, the
+implementer needs to be careful not to inadvertently introduce a
+vector for an attacker to invoke extensions not planned for by the
+tool operator, who might not have considered security considerations
+of specific extensions such as those posed by their use of
+dereferenceable identifiers ({{Section 6 of -deref}}).
+For instance, tools might require explicitly enabling the use of each
+extension that is not on an allowlist.
+This task can possibly be
+made less onerous by combining it with a mechanism for supplying any
+parameters controlling such an extension.
+
+--- back
+
 EDN and CDDL
 ============
 
-This appendix is informative.
+This appendix is for information.
 
 EDN was designed as a language to provide a human-readable
 representation of an instance, i.e., a single CBOR data item or CBOR
