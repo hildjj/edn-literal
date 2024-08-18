@@ -546,8 +546,8 @@ Elisions also can be used as part of a (text or byte) string:
 }
 ~~~
 
-The example "contract" uses string concatenation as per {{Section G.4
-of -cddl}} as updated by {{grammar}}, extending that by allowing
+The example "contract" combines string concatenation via the `+`
+operator ({{grammar}}) with
 ellipses; while the example
 "signature" uses special syntax that allows the use of ellipses
 between the bytes notated _inside_ `h''` literals.
@@ -693,17 +693,27 @@ The following additional items should help in the interpretation:
   comes to mind, this is an extension point for EDN; {{reg-ei}} defines
   a registry for additional values.
 
-* `string` and the rules preceding it in the same block realize both
-  the representation of strings that are split up into multiple chunks
-  ({{Section G.4 of -cddl}}) and the use of ellipses to represent elisions
+* Extended diagnostic notation allows a (text or byte) string to be
+  built up from multiple (text or byte) string literals, separated by
+  a `+` operator; these are then concatenated into a single string.
+
+  `string`, `string1e`, `string1`, and `ellipsis` realize: (1) the
+  representation of strings in this form split up into multiple
+  chunks, and (2) the use of ellipses to represent elisions
   ({{elision}}).
 
   Note that the syntax defined here for concatenation of components
   uses an explicit `+` operator between the components to be
-  concatenated; {{Section G.4 of -cddl}} used simple juxtaposition,
-  which got in the way of making the use of commas optional in other
-  places (`OC`).
-  The example equivalent text strings from {{Section G.4 of -cddl}} now read:
+  concatenated ({{Section G.4 of -cddl}} used simple juxtaposition,
+  which was not widely implemented and got in the way of making the use
+  of commas optional in other places via the rule `OC`).
+
+  Text strings and byte strings do not mix within such a
+  concatenation, except that byte string literal notation can be used
+  inside a sequence of concatenated text string notation literals, to
+  encode characters that may be better represented in an encoded way.
+  The following four text string values (adapted from {{Section G.4 of
+  -cddl}} by updating to explicit `+` operators) are equivalent:
 
       "Hello world"
       "Hello " + "world"
@@ -719,26 +729,25 @@ The following additional items should help in the interpretation:
       '' + h'48656c6c6f20776f726c64' + '' + b64''
       h'4 86 56c 6c6f' + h' 20776 f726c64'
 
+  The semantic processing of these constructs is governed by the
+  following rules:
 
-  The semantic processing of these rules is relatively
-  complex:
-
-  * A single `...` is a general ellipsis, which can stand for any data
-    item.
+  * A single `...` is a general ellipsis, which by itself can stand
+    for any data item.
   * An ellipsis can be concatenated (on one or both sides) with string
     chunks (`string1`); the result is a CBOR tag number CPA888 that contains an
     array with joined together spans of such chunks plus the ellipses
     represented by `888(null)`.
-  * A concatenated sequence of string chunks is simply joined together.
-    In both cases of joining strings, the rules of {{Section G.4 of
-    -cddl}} need to be followed; in particular, if a text string
-    results from the joining operation, that result needs to be valid
-    UTF-8.
+  * The bytes in the concatenated sequence of string chunks are simply
+    joined together.
+    If the joining operation is to result in a text string, that
+    result needs to be valid UTF-8.
   * Some of the strings may be app-strings.
-    If the type of the app-string is an actual string, joining of
-    chunked strings occurs as with directly notated strings; otherwise
-    the occurrence of more than one app-string or an app-string
-    together with a directly notated string cannot be processed.
+    If the result type of the app-string is an actual (text or byte)
+    string, joining of those string chunks occurs as with chunks
+    directly notated as strings; otherwise the occurrence of more than
+    one app-string or an app-string together with a directly notated
+    string cannot be processed.
 
 ABNF Definitions for app-string Content {#app-grammars}
 ---------------------------------------
