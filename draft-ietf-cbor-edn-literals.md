@@ -630,15 +630,15 @@ The following additional items should help in the interpretation:
   below); implementers are advised that some platform numeric parsers
   accept only a subset of the floating point syntax in this document
   and may require some preprocessing to use here.
-* `basenumber` stands for an integer in the usual base 16/hexadecimal
-  ("0x"), base 8/octal ("0o"), or base 2/binary ("0b") notation, unless the
-  optional part containing a "p" is present, in which case it stands
+* `hexint`, `octint`, and `binint` stand for an integer in the usual base 16/hexadecimal
+  ("0x"), base 8/octal ("0o"), or base 2/binary ("0b") notation.
+  `hexfloat` stands
   for a floating point number in the usual hexadecimal notation (which
   uses a mantissa in hexadecimal and an exponent in decimal notation,
   see Section 5.12.3 of {{IEEE754}}, Section 6.4.4.2 of {{C}}, or Section
   5.13.4 of {{Cplusplus}}; floating-suffix/floating-point-suffix from
   the latter two is not used here).
-* When `decnumber` or `basenumber` stands for an integer, the
+* For `hexint`, `octint`, `binint`, and when `decnumber` stands for an integer, the
   corresponding CBOR data item is represented using major type 0 or 1
   if possible, or using tag 2 or 3 if not.
   In the latter case, this specification does not define any encoding
@@ -652,10 +652,11 @@ The following additional items should help in the interpretation:
   specific sizes for tag head, byte string head, and the overall byte
   string.
 
-  Otherwise, and for `infin`, a floating point data item with major
+  When `decnumber` stands for a floating point value, and for
+  `hexfloat` and `nonfin`, a floating point data item with major
   type 7 is used in preferred serialization (unless modified by an
   encoding indicator, which then needs to be `_1`, `_2`, or `_3`).
-  For this, the number range needs to fit into a binary64 (or the size
+  For this, the number range needs to fit into an {{IEEE754}} binary64 (or the size
   corresponding to the encoding indicator), and the precision will be
   adjusted to binary64 before further applying preferred serialization
   (or to the size corresponding to the encoding indicator).
