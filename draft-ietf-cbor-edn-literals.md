@@ -568,8 +568,7 @@ text, e.g.:
 
 
 ~~~ cbor-diag
-{ "contract": "Herewith I buy" /.../ "gned: Alice & Bob",
-  "signature": h'4711/.../0815',
+{ "signature": h'4711/.../0815',
   # ...: ...
 }
 ~~~
