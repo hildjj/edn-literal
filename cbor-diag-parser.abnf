@@ -1,5 +1,4 @@
 seq             = S [item S *("," S item S) OC] S
-one-item        = S item S
 item            = map / array / tagged
                 / number / simple
                 / string / streamstring
@@ -31,7 +30,6 @@ tagged          = uint spec "(" S item S ")"
 
 app-prefix      = lcalpha *lcalnum ; including h and b64
                 / ucalpha *ucalnum ; tagged variant, if defined
-app-string      = app-prefix sqstr
 sqstr           = "'" *single-quoted "'"
 bstr            = embedded / sqstr / known-app-str / ext-app-str
 ext-app-str     = app-prefix sqstr
