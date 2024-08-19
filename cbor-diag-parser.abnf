@@ -39,8 +39,7 @@ known-app-str   = h / b64 / ip / dt
 
 ; app-string h
 h               = %s"h" SQUOTE inside-h SQUOTE
-inside-h        = S *(HEXDIG S HEXDIG S / "ellipsis" S) S
-ellipsis        = 3*"."
+inside-h        = S *(HEXDIG S HEXDIG S / ellipsis S) S
 S               = *blank *(comment *blank )
 
 ; app-string b64
