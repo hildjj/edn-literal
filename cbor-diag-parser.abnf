@@ -40,14 +40,14 @@ known-app-str   = h / b64 / ip / dt
 ; app-string h
 h               = %s"h" SQUOTE inside-h SQUOTE
 inside-h        = S *(HEXDIG S HEXDIG S / ellipsis S) S
-S               = *blank *(comment *blank )
 
 ; app-string b64
 b64             = %s"b64" SQUOTE inside-b64 SQUOTE
-inside-b64      = B *b64_4  [ b64_3 / b64_2 ]
-b64_4           = 4(b64dig B)
-b64_3           = 3(b64dig B) ["="] B
-b64_2           = 2(b64dig B) ["=" B "="] B
+inside-b64      = B *b64-4  [ b64-3 / b64-2 ]
+b64-4           = 4(b64dig B)
+b64-3           = 3(b64dig B) ["="] B
+b64-2           = 2(b64dig B) ["=" B "="] B
+b64dig          = ALPHA / DIGIT / "-" / "_" / "+" / "/"
 B               = *iblank *(hash-comment *iblank)
 iblank          = %x0A / %x20  ; Not HT or CR (gone)
 
@@ -95,7 +95,6 @@ doctet          = "25" %x30-35         ; 250-255
                 / "1" 2DIGIT           ; 100-199
                 / %x31-39 DIGIT        ; 10-99
                 / DIGIT                ; 0-9
-uint            = "0" / DIGIT1 *DIGIT
 
 
 tstr            = DQUOTE *double-quoted DQUOTE
@@ -113,14 +112,14 @@ slash-comment   = "/" *safe-non-slash "/"
 hash-comment    = "#" *safe-non-lf LF
 safe-non-slash  = safe-unescaped / LF / slash-escaped
 safe-non-lf     = safe-unescaped / "/" / hash-escaped
-safe-unescaped  =  %x0D ; carriage return
-                 / %x20-26   ; omit 0x27 '
-                 / %x28-2E   ; omit 0x2F /
-                 / %x30-5B   ; omit 0x5C \
-                 / %x5D-D7FF ; skip surrogate code points
-                 / %xE000-10FFFF
+safe-unescaped  =  %x0D ; carriage return
+                 / %x20-26   ; omit 0x27 '
+                 / %x28-2E   ; omit 0x2F /
+                 / %x30-5B   ; omit 0x5C \
+                 / %x5D-D7FF ; skip surrogate code points
+                 / %xE000-10FFFF
 slash-escaped   = "\" ( SQUOTE / "/" / escapable )
-hash-escaped    = "\" ( SQOUTE / "\" )
+hash-escaped    = "\" ( SQUOTE / "\" )
 
 ; optional trailing comma (ignored)
 OC              = ["," S]
@@ -171,8 +170,8 @@ unescaped       = %x0A ; new line
                 / %xE000-10FFFF
 
 DQUOTE          = %x22    ; " double quote
-SQUOTE          = %x27    ; ' single quote
-LF              = %x0A    ; LF (Line Feed)
+SQUOTE          = %x27    ; ' single quote
+LF              = %x0A    ; LF (Line Feed)
 
 DIGIT           = %x30-39 ; 0-9
 DIGIT1          = %x31-39 ; 1-9
@@ -185,4 +184,5 @@ lcalpha         = %x61-7A ; a-z
 lcalnum         = lcalpha / DIGIT
 ucalpha         = %x41-5A ; A-Z
 ucalnum         = ucalpha / DIGIT
-wordchar        = "_" / lcalnum / ucalpha ; [_a-z0-9A-Z]
+ALPHA           = lcalpha / ucalpha
+wordchar        = "_" / ALPHA / DIGIT ; [_a-zA-Z0-9]
