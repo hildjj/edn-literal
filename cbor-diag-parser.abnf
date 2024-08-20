@@ -36,13 +36,17 @@ bstr            = embedded / sqstr / known-app-str / ext-app-str
 ext-app-str     = app-prefix sqstr
 known-app-str   = h / b64 / ip / dt
 
+invalid-app-str = *single-quoted ; error parsing the grammar of this app-str
+
 ; app-string h
 h               = %s"h" SQUOTE inside-h SQUOTE
-inside-h        = S *(HEXDIG S HEXDIG S / ellipsis S) S
+inside-h        = valid-h / invalid-app-str
+valid-h         = S *(HEXDIG S HEXDIG S / ellipsis S) S
 
 ; app-string b64
 b64             = %s"b64" SQUOTE inside-b64 SQUOTE
-inside-b64      = B *b64-4  [ b64-3 / b64-2 ]
+inside-b64      = valid-b64 / invalid-app-str
+valid-b64       = B *b64-4  [ b64-3 / b64-2 ]
 b64-4           = 4(b64dig B)
 b64-3           = 3(b64dig B) ["="] B
 b64-2           = 2(b64dig B) ["=" B "="] B
@@ -51,7 +55,8 @@ B               = *iblank *(hash-comment *iblank)
 iblank          = %x0A / %x20  ; Not HT or CR (gone)
 
 ; app-string dt
-dt              = (%s"dt" / %s"DT") SQUOTE date-time SQUOTE
+dt              = (%s"dt" / %s"DT") SQUOTE inside-dt SQUOTE
+inside-dt       = date-time / invalid-app-str
 full-date       = date-fullyear "-" date-month "-" date-mday
 full-time       = partial-time time-offset
 date-time       = full-date "T" full-time
@@ -72,7 +77,8 @@ partial-time    = time-hour ":" time-minute ":" time-second
 
 ; app-string ip
 ip              = (%s"ip" / %s"IP") SQUOTE inside-ip SQUOTE
-inside-ip       = IPaddress ["/" uint]
+inside-ip       = valid-ip / invalid-app-str
+valid-ip        = IPaddress ["/" uint]
 IPaddress       = IPv4address/ IPv6address
 
 ; ABNF from RFC 3986, re-arranged for PEG compatibility:
@@ -119,6 +125,7 @@ safe-unescaped  =  %x0D ; carriage return
                  / %xE000-10FFFF
 slash-escaped   = "\" ( SQUOTE / "/" / escapable )
 hash-escaped    = "\" ( SQUOTE / "\" )
+; h'AA#foo'
 
 ; optional trailing comma (ignored)
 OC              = ["," S]
