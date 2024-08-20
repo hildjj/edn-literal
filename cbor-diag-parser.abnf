@@ -41,7 +41,7 @@ invalid-app-str = *single-quoted ; error parsing the grammar of this app-str
 ; app-string h
 h               = %s"h" SQUOTE inside-h SQUOTE
 inside-h        = valid-h / invalid-app-str
-valid-h         = S *(HEXDIG S HEXDIG S / ellipsis S) S
+valid-h         = SQS *(HEXDIG SQS HEXDIG SQS / ellipsis SQS) SQS
 
 ; app-string b64
 b64             = %s"b64" SQUOTE inside-b64 SQUOTE
@@ -51,7 +51,7 @@ b64-4           = 4(b64dig B)
 b64-3           = 3(b64dig B) ["="] B
 b64-2           = 2(b64dig B) ["=" B "="] B
 b64dig          = ALPHA / DIGIT / "-" / "_" / "+" / "/"
-B               = *iblank *(hash-comment *iblank)
+B               = *iblank *(sq-hash-comment *iblank)
 iblank          = %x0A / %x20  ; Not HT or CR (gone)
 
 ; app-string dt
@@ -112,10 +112,17 @@ kp              = item S ":" S item
 ; We allow %x09 HT in prose, but not in strings
 blank           = %x09 / %x0A / %x0D / %x20
 S               = *blank *(comment *blank)
+; SQS is whitespace/comments inside some single quoted strings
+SQS             = *blank *(safe-comment *blank)
 comment         = slash-comment / hash-comment
+safe-comment    = sq-slash-comment / sq-hash-comment
 slash-comment   = "/" *safe-non-slash "/"
-hash-comment    = "#" *safe-non-lf LF
+hash-comment    = "#" *non-lf LF
+sq-slash-comment= "/" *safe-non-slash "/"
+sq-hash-comment = "#" *safe-non-lf LF
+non-slash       = safe-unescaped / LF / SQUOTE / slash-escaped
 safe-non-slash  = safe-unescaped / LF / slash-escaped
+non-lf          = safe-unescaped / "/" / SQUOTE /hash-escaped
 safe-non-lf     = safe-unescaped / "/" / hash-escaped
 safe-unescaped  =  %x0D ; carriage return
                  / %x20-26   ; omit 0x27 '
@@ -125,7 +132,6 @@ safe-unescaped  =  %x0D ; carriage return
                  / %xE000-10FFFF
 slash-escaped   = "\" ( SQUOTE / "/" / escapable )
 hash-escaped    = "\" ( SQUOTE / "\" )
-; h'AA#foo'
 
 ; optional trailing comma (ignored)
 OC              = ["," S]
