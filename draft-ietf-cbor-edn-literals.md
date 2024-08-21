@@ -734,18 +734,25 @@ The following additional items should help in the interpretation:
 
   * A single `...` is a general ellipsis, which by itself can stand
     for any data item.
+    Multiple adjacent concatenated ellipses are equivalent to a single
+    ellipsis.
   * An ellipsis can be concatenated (on one or both sides) with string
     chunks (`string1`); the result is a CBOR tag number CPA888 that contains an
     array with joined together spans of such chunks plus the ellipses
     represented by `888(null)`.
+  * If there is no ellipsis in the concatenated list, the result of
+    processing the list will always be a single item.
   * The bytes in the concatenated sequence of string chunks are simply
-    joined together.
-    If the joining operation is to result in a text string, that
+    joined together, proceeding from left to right.
+    If the left hand side of a concatenation is a text string, the
+    joining operation results in a text string, and that
     result needs to be valid UTF-8.
+    If the left hand side is a byte string, the right hand side also
+    needs to be a byte string.
   * Some of the strings may be app-strings.
     If the result type of the app-string is an actual (text or byte)
     string, joining of those string chunks occurs as with chunks
-    directly notated as strings; otherwise the occurrence of more than
+    directly notated as string literals; otherwise the occurrence of more than
     one app-string or an app-string together with a directly notated
     string cannot be processed.
 
