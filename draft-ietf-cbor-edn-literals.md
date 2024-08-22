@@ -622,6 +622,30 @@ obvious.
 
 The following additional items should help in the interpretation:
 
+* As mentioned in the terminology ({{terminology}}), the ABNF terminal
+  values in this document define Unicode scalar values (characters)
+  rather than their UTF-8 encoding.  For example, the Unicode PLACE OF
+  INTEREST SIGN (U+2318) would be defined in ABNF as %x2318.
+
+* Unicode CARRIAGE RETURN (U+000D, often seen escaped as "\r" in many
+  programming languages) that exist in the input (unescaped) are
+  ignored as if they were not in the input wherever they appear.
+  This is most important when they are found in (text or byte) string
+  contexts (see the "unescaped" ABNF rule).
+  On some platforms, a carriage return is always added in front of a
+  LINE FEED (U+000A, also often seen escaped as "\n" in many
+  programming languages), but on other platforms, carriage returns are
+  not used at line ends.
+  The intent behind ignoring unescaped carriage returns is to ensure
+  that input generated or processed on either of these kinds of
+  platforms will generate the same bytes in the CBOR data items
+  created from that input.
+  (Platforms that use just a CARRIAGE RETURN to signify an end of line
+  are no longer relevant and the files they produce are out of scope
+  for this document.)
+  If a carriage return is needed in the CBOR data item, it can be
+  added explicitly using the escaped form `\r`.
+
 * `decnumber` stands for an integer in the usual decimal notation, unless at
   least one of the optional parts starting with "." and "e" are
   present, in which case it stands for a floating point value in the
