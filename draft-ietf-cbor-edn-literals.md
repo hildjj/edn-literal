@@ -386,9 +386,10 @@ For completeness, the lower-case variant `ip'2001:db8::/56'` or  `ip'192.0.2.0/2
 an unwrapped `[56,h'20010db8']` or `[24,h'c00002']`; however, in this case the information
 on whether an address is IPv4 or IPv6 often needs to come from the context.
 
-Note that there is no direct representation of an address combined
-with a prefix length; this can be represented as
-`52([ip'192.0.2.42',24])`, if needed.
+Note that there is no direct representation of the "Interface format"
+defined in {{Section 3.1.3 of -iptag}}, an address combined with an
+optional prefix length and an optional zone identifier.
+This can be represented as in `52([ip'192.0.2.42',24])`, if needed.
 
 Examples: the CBOR diagnostic notation
 
