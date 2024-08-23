@@ -116,14 +116,14 @@ S               = *blank *(comment *blank)
 SQS             = *blank *(safe-comment *blank)
 comment         = slash-comment / hash-comment
 safe-comment    = sq-slash-comment / sq-hash-comment
-slash-comment   = "/" *safe-non-slash "/"
+slash-comment   = "/" *non-slash "/"
 hash-comment    = "#" *non-lf LF
 sq-slash-comment= "/" *safe-non-slash "/"
 sq-hash-comment = "#" *safe-non-lf LF
-non-slash       = safe-unescaped / LF / SQUOTE / slash-escaped
 safe-non-slash  = safe-unescaped / LF / slash-escaped
-non-lf          = safe-unescaped / "/" / SQUOTE /hash-escaped
+non-slash       = safe-non-slash / SQUOTE
 safe-non-lf     = safe-unescaped / "/" / hash-escaped
+non-lf          = safe-non-lf / SQUOTE
 safe-unescaped  =  %x0D ; carriage return
                  / %x20-26   ; omit 0x27 '
                  / %x28-2E   ; omit 0x2F /
