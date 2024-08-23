@@ -31,7 +31,7 @@ tagged          = uint spec "(" S item S ")"
 
 app-prefix      = lcalpha *lcalnum ; including h and b64
                 / ucalpha *ucalnum ; tagged variant, if defined
-sqstr           = "'" *single-quoted "'"
+sqstr           = SQUOTE *single-quoted SQUOTE
 bstr            = embedded / sqstr / known-app-str / ext-app-str
 ext-app-str     = app-prefix sqstr
 known-app-str   = h / b64 / ip / dt
@@ -52,7 +52,7 @@ b64-3           = 3(b64dig B) ["="] B
 b64-2           = 2(b64dig B) ["=" B "="] B
 b64dig          = ALPHA / DIGIT / "-" / "_" / "+" / "/"
 B               = *iblank *(sq-hash-comment *iblank)
-iblank          = %x0A / %x20  ; Not HT or CR (gone)
+iblank          = LF / SPACE  ; Not HT or CR (gone)
 
 ; app-string dt
 dt              = (%s"dt" / %s"DT") SQUOTE inside-dt SQUOTE
@@ -78,7 +78,7 @@ partial-time    = time-hour ":" time-minute ":" time-second
 ; app-string ip
 ip              = (%s"ip" / %s"IP") SQUOTE inside-ip SQUOTE
 inside-ip       = valid-ip / invalid-app-str
-valid-ip        = IPaddress ["/" uint]
+valid-ip        = IPaddress [SLASH uint]
 IPaddress       = IPv4address/ IPv6address
 
 ; ABNF from RFC 3986, re-arranged for PEG compatibility:
@@ -110,27 +110,31 @@ map             = "{" spec S [kp S *("," S kp S) OC] "}"
 kp              = item S ":" S item
 
 ; We allow %x09 HT in prose, but not in strings
-blank           = %x09 / %x0A / %x0D / %x20
+blank           = HTAB / CR / LF / SPACE
 S               = *blank *(comment *blank)
 ; SQS is whitespace/comments inside some single quoted strings
-SQS             = *blank *(safe-comment *blank)
-comment         = slash-comment / hash-comment
-safe-comment    = sq-slash-comment / sq-hash-comment
-slash-comment   = "/" *non-slash "/"
-hash-comment    = "#" *non-lf LF
-sq-slash-comment= "/" *safe-non-slash "/"
-sq-hash-comment = "#" *safe-non-lf LF
-safe-non-slash  = safe-unescaped / LF / slash-escaped
-non-slash       = safe-non-slash / SQUOTE
-safe-non-lf     = safe-unescaped / "/" / hash-escaped
-non-lf          = safe-non-lf / SQUOTE
-safe-unescaped  =  %x0D ; carriage return
-                 / %x20-26   ; omit 0x27 '
+SQS              = *blank *(sq-comment *blank)
+comment          = slash-comment / hash-comment
+sq-comment       = sq-slash-comment / sq-hash-comment
+slash-comment    = SLASH *non-slash SLASH
+hash-comment     = HASH *non-lf LF
+sq-slash-comment = SLASH *sq-non-slash SLASH
+sq-hash-comment  = HASH *sq-non-lf LF
+non-slash        = sq-non-slash / SQUOTE
+sq-non-slash     = always-safe / LF / DQUOTE / slash-escaped
+non-lf           = sq-non-lf / SQUOTE
+sq-non-lf        = always-safe / SLASH / DQUOTE / hash-escaped
+
+; Note that no other C0 characters are allowed, including %x09 HT
+always-safe     =  LF
+                 / CR ; carriage return -- ignored on input
+                 / %x20-21   ; omit 0x22 "
+                 / %x23-26   ; omit 0x27 '
                  / %x28-2E   ; omit 0x2F /
                  / %x30-5B   ; omit 0x5C \
                  / %x5D-D7FF ; skip surrogate code points
                  / %xE000-10FFFF
-slash-escaped   = "\" ( SQUOTE / "/" / escapable )
+slash-escaped   = "\" ( SQUOTE / SLASH / escapable )
 hash-escaped    = "\" ( SQUOTE / "\" )
 
 ; optional trailing comma (ignored)
@@ -141,14 +145,18 @@ OC              = ["," S]
 streamstring    = "(_" S string S *("," S string S) OC ")"
 spec            = ["_" *wordchar]
 
-double-quoted   = unescaped
-                / "'"
+double-quoted   = always-safe
+                / LF
+                / SLASH
+                / SQUOTE
                 / "\" DQUOTE
                 / "\" escapable
 
-single-quoted   = unescaped
+single-quoted   = always-safe
+                / LF
+                / SLASH
                 / DQUOTE
-                / "\" "'"
+                / "\" SQUOTE
                 / "\" escapable
 
 escapable       = %s"b" ; BS backspace U+0008
@@ -169,21 +177,14 @@ low-surrogate   = "D" ("C"/"D"/"E"/"F") 2HEXDIG
 hexscalar       = "10" 4HEXDIG / HEXDIG1 4HEXDIG
                 / non-surrogate / 1*3HEXDIG
 
-; Note that no other C0 characters are allowed, including %x09 HT
-unescaped       = %x0A ; new line
-                / %x0D ; carriage return -- ignored on input
-                / %x20-21
-                     ; omit 0x22 "
-                / %x23-26
-                     ; omit 0x27 '
-                / %x28-5B
-                     ; omit 0x5C \
-                / %x5D-D7FF ; skip surrogate code points
-                / %xE000-10FFFF
-
-DQUOTE          = %x22    ; " double quote
-SQUOTE          = %x27    ; ' single quote
+HTAB            = %x09    ; HT (horizontal tabulation)
 LF              = %x0A    ; LF (Line Feed)
+CR              = %x0D    ; CR (Carriange Return)
+SPACE           = %x20    ; SPACE
+DQUOTE          = %x22    ; " double quote
+HASH            = %x23    ; # octothorpe
+SQUOTE          = %x27    ; ' single quote
+SLASH           = %x2F    ; / forward slash
 
 DIGIT           = %x30-39 ; 0-9
 DIGIT1          = %x31-39 ; 1-9
