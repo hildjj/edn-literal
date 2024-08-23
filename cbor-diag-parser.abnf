@@ -127,8 +127,7 @@ non-lf           = sq-non-lf / SQUOTE
 sq-non-lf        = always-safe / SLASH / DQUOTE / hash-escaped
 
 ; Note that no other C0 characters are allowed, including %x09 HT
-always-safe     =  LF
-                 / CR ; carriage return -- ignored on input
+always-safe     =  CR ; carriage return -- ignored on input
                  / %x20-21   ; omit 0x22 "
                  / %x23-26   ; omit 0x27 '
                  / %x28-2E   ; omit 0x2F /
